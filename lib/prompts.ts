@@ -1,5 +1,66 @@
 import { GenerateRequest, RestaurantStyle, DescriptionLength } from "./types";
 
+// Few-shot example interface for teaching the AI the comedic pattern
+interface FewShotExample {
+  dish: string;
+  style: RestaurantStyle;
+  length: DescriptionLength;
+  outputWithReveal: string;
+  outputWithoutReveal: string;
+}
+
+// Few-shot examples with both reveal and no-reveal variants
+const FEW_SHOT_EXAMPLES: FewShotExample[] = [
+  {
+    dish: "grilled cheese",
+    style: "bistro",
+    length: "excessive",
+    outputWithReveal:
+      "Butter-Lacquered Rustic Bread Duo, Melted Dairy Embrace, Pan-Coaxed to Golden Confidence, With the Humble Reveal: grilled cheese",
+    outputWithoutReveal:
+      "Butter-Lacquered Rustic Bread Duo, Melted Dairy Embrace, Pan-Coaxed to Golden Confidence, Finished with a Whisper of Sea Salt",
+  },
+  {
+    dish: "tuna salad",
+    style: "cafe",
+    length: "medium",
+    outputWithReveal:
+      "Oceanic Protein Folded with Creamy Brightness, Herb-Flecked and Leisurely Seasoned, Served with the Truth: tuna salad",
+    outputWithoutReveal:
+      "Oceanic Protein Folded with Creamy Brightness, Herb-Flecked and Leisurely Seasoned, Resting on a Bed of Artisanal Greens",
+  },
+  {
+    dish: "corned beef",
+    style: "tasting-menu",
+    length: "excessive",
+    outputWithReveal:
+      "Pink-Salt Brined Heritage Protein, Peppercorn-Lifted and Bay-Leaf Haunted, Slow-Submerged Until It Softens Emotionally, Then the Reveal: corned beef",
+    outputWithoutReveal:
+      "Pink-Salt Brined Heritage Protein, Peppercorn-Lifted and Bay-Leaf Haunted, Slow-Submerged Until It Softens Emotionally, Accompanied by Root Vegetable Meditations",
+  },
+];
+
+// Build the few-shot examples section for the prompt
+function buildFewShotSection(includeReveal: boolean): string {
+  const examples = FEW_SHOT_EXAMPLES.map((ex, i) => {
+    const output = includeReveal ? ex.outputWithReveal : ex.outputWithoutReveal;
+    return `Example ${i + 1}:
+Input: dish = "${ex.dish}", style = "${ex.style}", length = "${ex.length}"
+Output: "${output}"`;
+  }).join("\n\n");
+
+  const patternDescription = includeReveal
+    ? "pretentious buildup → mundane reveal"
+    : "pretentious description without revealing the dish name";
+
+  return `
+Learn from these examples of the comedic pattern (${patternDescription}):
+
+${examples}
+
+Now apply this pattern:`;
+}
+
 // Style descriptions that define the tone and vocabulary for each restaurant type
 const STYLE_DESCRIPTIONS: Record<RestaurantStyle, string> = {
   cafe: "Casual but trying too hard. Use words like 'artisanal', 'locally-sourced', 'hand-crafted'. Mild pretension with a friendly neighborhood vibe.",
@@ -57,7 +118,7 @@ export function buildPrompt(request: GenerateRequest): string {
 
   const toggleSection =
     toggleInstructions.length > 0
-      ? `\nAdditional requirements:\n${toggleInstructions.map((t) => `- ${t}`).join("\n")}`
+      ? `\n**IMPORTANT - Apply these additional requirements to your output:**\n${toggleInstructions.map((t) => `- ${t}`).join("\n")}\n`
       : "";
 
   return `You are a pretentious food critic writing menu descriptions for fine dining restaurants.
@@ -66,15 +127,15 @@ Your task is to transform a simple dish name into an absurdly over-the-top, humo
 Style: ${STYLE_DESCRIPTIONS[style]}
 
 Length: ${LENGTH_INSTRUCTIONS[length]}
-${toggleSection}
 
 Important guidelines:
 - Be genuinely creative and amusing. Each description should feel unique.
 - Never be generic or repetitive.
-- Don't mention the original dish name directly in the description (unless the Reveal toggle requires it at the end).
+- Don't mention the original dish name directly in the description (unless specifically required below).
 - Make the reader smile or chuckle at the absurdity.
 - Output ONLY the menu description text, nothing else.
-
+${buildFewShotSection(addReveal)}
+${toggleSection}
 Transform this dish: "${dishName}"`;
 }
 
