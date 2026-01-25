@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .pill-button {
+    @apply px-4 py-2 rounded-full border-2 border-charcoal
+           transition-colors cursor-pointer
+           hover:bg-butter/50 focus:outline-none focus:ring-2
+           focus:ring-charcoal focus:ring-offset-2;
+  }
+
+  .pill-button-selected {
+    @apply bg-mint border-charcoal;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl border-2 border-charcoal
+           shadow-lg p-6;
+  }
+
+  .menu-card {
+    @apply bg-white rounded-2xl border-3 border-charcoal
+           shadow-xl p-8 font-heading;
+  }
+}
+
+@layer utilities {
+  .border-3 {
+    border-width: 3px;
+  }
+}
