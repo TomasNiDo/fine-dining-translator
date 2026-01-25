@@ -1,0 +1,232 @@
+openapi: 3.0.3
+info:
+  title: Fine Dining Translator API
+  description: API for generating pretentious menu descriptions using AI
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Next.js API routes
+
+paths:
+  /generate:
+    post:
+      summary: Generate AI-powered menu description
+      description: |
+        Transforms a simple dish name into a pretentious fine dining menu description.
+        Uses GPT-4o to generate unique, creative descriptions based on user preferences.
+      operationId: generateDescription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateRequest'
+            examples:
+              basic:
+                summary: Basic request
+                value:
+                  dishName: "Grilled Cheese"
+                  options:
+                    style: "gastropub"
+                    length: "medium"
+                    addReveal: false
+                    addChefEgo: false
+                    addTechniques: false
+              fullyLoaded:
+                summary: All options enabled
+                value:
+                  dishName: "Hot Dog"
+                  options:
+                    style: "tasting-menu"
+                    length: "absolutely-unnecessary"
+                    addReveal: true
+                    addChefEgo: true
+                    addTechniques: true
+      responses:
+        '200':
+          description: Successfully generated description
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSuccessResponse'
+              example:
+                success: true
+                data:
+                  originalDish: "Grilled Cheese"
+                  description: "A meditation on childhood comfort, reimagined through the lens of artisanal craftsmanship. Aged farmstead cheddar, lovingly coaxed into molten submission between slices of heritage sourdough, kissed by clarified butter from grass-fed Normandy cows."
+                  style: "gastropub"
+                  generatedAt: "2026-01-26T14:30:00.000Z"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateErrorResponse'
+              examples:
+                missingDish:
+                  summary: Missing dish name
+                  value:
+                    success: false
+                    error:
+                      code: "DISH_NAME_REQUIRED"
+                      message: "Please enter a dish name to transform."
+                dishTooLong:
+                  summary: Dish name too long
+                  value:
+                    success: false
+                    error:
+                      code: "DISH_NAME_TOO_LONG"
+                      message: "That dish name is quite the mouthful! Please keep it under 200 characters."
+        '429':
+          description: Rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "RATE_LIMITED"
+                  message: "Our kitchen is too busy right now. Please wait a moment and try again."
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "AI_SERVICE_ERROR"
+                  message: "The chef had a creative block. Let's try again."
+        '504':
+          description: Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "AI_TIMEOUT"
+                  message: "This dish is taking too long to prepare. Please try again."
+
+components:
+  schemas:
+    RestaurantStyle:
+      type: string
+      enum:
+        - cafe
+        - gastropub
+        - bistro
+        - steakhouse
+        - michelin
+        - tasting-menu
+      description: Restaurant style affecting tone and vocabulary
+
+    DescriptionLength:
+      type: string
+      enum:
+        - short
+        - medium
+        - excessive
+        - absolutely-unnecessary
+      description: Desired verbosity level
+
+    TranslatorOptions:
+      type: object
+      required:
+        - style
+        - length
+        - addReveal
+        - addChefEgo
+        - addTechniques
+      properties:
+        style:
+          $ref: '#/components/schemas/RestaurantStyle'
+        length:
+          $ref: '#/components/schemas/DescriptionLength'
+        addReveal:
+          type: boolean
+          description: Append parenthetical reveal of original dish name
+        addChefEgo:
+          type: boolean
+          description: Include chef attribution phrases
+        addTechniques:
+          type: boolean
+          description: Incorporate cooking technique terminology
+
+    GenerateRequest:
+      type: object
+      required:
+        - dishName
+        - options
+      properties:
+        dishName:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Simple dish name to transform
+          example: "Grilled Cheese"
+        options:
+          $ref: '#/components/schemas/TranslatorOptions'
+
+    GenerateSuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          type: object
+          required:
+            - originalDish
+            - description
+            - style
+            - generatedAt
+          properties:
+            originalDish:
+              type: string
+              description: Echo of input dish name
+            description:
+              type: string
+              description: AI-generated pretentious description
+            style:
+              $ref: '#/components/schemas/RestaurantStyle'
+            generatedAt:
+              type: string
+              format: date-time
+              description: ISO 8601 timestamp of generation
+
+    GenerateErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          enum: [false]
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              enum:
+                - INVALID_INPUT
+                - DISH_NAME_REQUIRED
+                - DISH_NAME_TOO_LONG
+                - AI_SERVICE_ERROR
+                - AI_TIMEOUT
+                - RATE_LIMITED
+              description: Machine-readable error code
+            message:
+              type: string
+              description: User-friendly error message

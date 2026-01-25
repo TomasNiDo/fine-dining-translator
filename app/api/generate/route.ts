@@ -74,7 +74,6 @@ export async function POST(
     dishName,
     options: body.options,
   });
-
   // Call OpenAI GPT-4o
   try {
     const completion = await openai.chat.completions.create({
