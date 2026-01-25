@@ -9,34 +9,34 @@ interface FewShotExample {
   outputWithoutReveal: string;
 }
 
-// Few-shot examples with both reveal and no-reveal variants
+// Few-shot examples with both reveal and no-reveal variants (sentence case)
 const FEW_SHOT_EXAMPLES: FewShotExample[] = [
   {
     dish: "grilled cheese",
     style: "bistro",
     length: "excessive",
     outputWithReveal:
-      "Butter-Lacquered Rustic Bread Duo, Melted Dairy Embrace, Pan-Coaxed to Golden Confidence, With the Humble Reveal: grilled cheese",
+      "Butter-lacquered rustic bread duo, melted dairy embrace, pan-coaxed to golden confidence, with the humble reveal: grilled cheese",
     outputWithoutReveal:
-      "Butter-Lacquered Rustic Bread Duo, Melted Dairy Embrace, Pan-Coaxed to Golden Confidence, Finished with a Whisper of Sea Salt",
+      "Butter-lacquered rustic bread duo, melted dairy embrace, pan-coaxed to golden confidence, finished with a whisper of sea salt",
   },
   {
     dish: "tuna salad",
     style: "cafe",
     length: "medium",
     outputWithReveal:
-      "Oceanic Protein Folded with Creamy Brightness, Herb-Flecked and Leisurely Seasoned, Served with the Truth: tuna salad",
+      "Oceanic protein folded with creamy brightness, herb-flecked and leisurely seasoned, served with the truth: tuna salad",
     outputWithoutReveal:
-      "Oceanic Protein Folded with Creamy Brightness, Herb-Flecked and Leisurely Seasoned, Resting on a Bed of Artisanal Greens",
+      "Oceanic protein folded with creamy brightness, herb-flecked and leisurely seasoned, resting on a bed of artisanal greens",
   },
   {
     dish: "corned beef",
     style: "tasting-menu",
     length: "excessive",
     outputWithReveal:
-      "Pink-Salt Brined Heritage Protein, Peppercorn-Lifted and Bay-Leaf Haunted, Slow-Submerged Until It Softens Emotionally, Then the Reveal: corned beef",
+      "Pink-salt brined heritage protein, peppercorn-lifted and bay-leaf haunted, slow-submerged until it softens emotionally, then the reveal: corned beef",
     outputWithoutReveal:
-      "Pink-Salt Brined Heritage Protein, Peppercorn-Lifted and Bay-Leaf Haunted, Slow-Submerged Until It Softens Emotionally, Accompanied by Root Vegetable Meditations",
+      "Pink-salt brined heritage protein, peppercorn-lifted and bay-leaf haunted, slow-submerged until it softens emotionally, accompanied by root vegetable meditations",
   },
 ];
 
@@ -78,8 +78,8 @@ const STYLE_DESCRIPTIONS: Record<RestaurantStyle, string> = {
 
 // Length instructions that control output verbosity
 const LENGTH_INSTRUCTIONS: Record<DescriptionLength, string> = {
-  short: "Write exactly 1-2 sentences. Be punchy but pretentious.",
-  medium: "Write exactly 2-3 sentences. Balance wit with verbosity.",
+  short: "Write exactly 1 sentence. Be punchy but pretentious.",
+  medium: "Write exactly 2 sentences. Balance wit with verbosity.",
   excessive:
     "Write 3-4 sentences. Really lean into the pretension. Add flowery adjectives.",
   "absolutely-unnecessary":
@@ -133,6 +133,7 @@ Important guidelines:
 - Never be generic or repetitive.
 - Don't mention the original dish name directly in the description (unless specifically required below).
 - Make the reader smile or chuckle at the absurdity.
+- Use sentence case: capitalize only the first letter of the description and proper nouns (like "French" or chef names). Do NOT use Title Case where every word is capitalized.
 - Output ONLY the menu description text, nothing else.
 ${buildFewShotSection(addReveal)}
 ${toggleSection}
