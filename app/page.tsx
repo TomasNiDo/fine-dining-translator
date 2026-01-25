@@ -8,6 +8,8 @@ import { LengthSelector } from "@/components/LengthSelector";
 import { ToggleGroup } from "@/components/ToggleGroup";
 import { GenerateButton } from "@/components/GenerateButton";
 import { MenuCard } from "@/components/MenuCard";
+import { Footer } from "@/components/Footer";
+import { Decorations } from "@/components/Decorations";
 import {
   TranslationResult,
   TranslatorOptions,
@@ -80,60 +82,69 @@ export default function Home() {
   const canGenerate = dishName.trim().length > 0 && !isGenerating;
 
   return (
-    <main className="min-h-screen p-4 md:p-8">
-      <div className="max-w-2xl mx-auto space-y-8">
-        <Header />
+    <>
+      <Decorations />
+      <main className="min-h-screen p-4 md:p-8 relative z-10">
+        <div className="max-w-2xl mx-auto space-y-8">
+          <Header />
 
-        <div className="card space-y-6">
-          <DishInput value={dishName} onChange={setDishName} />
+          <div className="card space-y-6">
+            <DishInput value={dishName} onChange={setDishName} />
 
-          <StyleSelector
-            value={options.style}
-            onChange={(style: RestaurantStyle) => updateOption("style", style)}
-          />
+            <div className="grid md:grid-cols-2 gap-6">
+              <StyleSelector
+                value={options.style}
+                onChange={(style: RestaurantStyle) =>
+                  updateOption("style", style)
+                }
+              />
 
-          <LengthSelector
-            value={options.length}
-            onChange={(length: DescriptionLength) =>
-              updateOption("length", length)
-            }
-          />
+              <LengthSelector
+                value={options.length}
+                onChange={(length: DescriptionLength) =>
+                  updateOption("length", length)
+                }
+              />
+            </div>
 
-          <ToggleGroup
-            addReveal={options.addReveal}
-            addChefEgo={options.addChefEgo}
-            addTechniques={options.addTechniques}
-            onRevealChange={(checked) => updateOption("addReveal", checked)}
-            onChefEgoChange={(checked) => updateOption("addChefEgo", checked)}
-            onTechniquesChange={(checked) =>
-              updateOption("addTechniques", checked)
-            }
-          />
+            <ToggleGroup
+              addReveal={options.addReveal}
+              addChefEgo={options.addChefEgo}
+              addTechniques={options.addTechniques}
+              onRevealChange={(checked) => updateOption("addReveal", checked)}
+              onChefEgoChange={(checked) => updateOption("addChefEgo", checked)}
+              onTechniquesChange={(checked) =>
+                updateOption("addTechniques", checked)
+              }
+            />
 
-          <GenerateButton
-            onClick={handleGenerate}
-            disabled={!canGenerate}
-            isLoading={isGenerating}
-          />
-        </div>
-
-        {error && !isGenerating && (
-          <div className="card bg-red-50 border-red-200 text-red-800">
-            <p className="text-center">{error.message}</p>
+            <GenerateButton
+              onClick={handleGenerate}
+              disabled={!canGenerate}
+              isLoading={isGenerating}
+            />
           </div>
-        )}
 
-        {result && !isGenerating && !error && (
-          <MenuCard result={result} isLoading={isGenerating} />
-        )}
+          {error && !isGenerating && (
+            <div className="card bg-blush-light/50 border-blush text-charcoal">
+              <p className="text-center">{error.message}</p>
+            </div>
+          )}
 
-        {!result && !isGenerating && !error && (
-          <p className="text-center text-charcoal/60 italic">
-            Enter a dish name above and click &ldquo;Generate
-            Masterpiece&rdquo; to begin your culinary journey.
-          </p>
-        )}
-      </div>
-    </main>
+          {result && !isGenerating && !error && (
+            <MenuCard result={result} isLoading={isGenerating} />
+          )}
+
+          {!result && !isGenerating && !error && (
+            <p className="text-center text-charcoal/50 italic text-sm">
+              Enter a dish name above and click &ldquo;Generate
+              Masterpiece&rdquo; to begin your culinary journey.
+            </p>
+          )}
+
+          <Footer />
+        </div>
+      </main>
+    </>
   );
 }

@@ -11,29 +11,42 @@
 
 @layer components {
   .pill-button {
-    @apply px-4 py-2 rounded-full border-2 border-charcoal
-           transition-colors cursor-pointer
-           hover:bg-butter/50 focus:outline-none focus:ring-2
-           focus:ring-charcoal focus:ring-offset-2;
+    @apply px-4 py-2 rounded-full border-2 border-charcoal/80
+           transition-all duration-200 cursor-pointer
+           hover:shadow-soft hover:border-charcoal
+           focus:outline-none focus:ring-2 focus:ring-charcoal/50 focus:ring-offset-2;
   }
 
   .pill-button-selected {
-    @apply bg-mint border-charcoal;
+    @apply bg-mint border-charcoal shadow-soft;
   }
 
   .card {
-    @apply bg-white rounded-2xl border-2 border-charcoal
-           shadow-lg p-6;
+    @apply bg-white/90 backdrop-blur-sm rounded-3xl border-2 border-charcoal/20
+           shadow-soft-lg p-6 md:p-8;
   }
 
   .menu-card {
-    @apply bg-white rounded-2xl border-3 border-charcoal
-           shadow-xl p-8 font-heading;
+    @apply bg-white rounded-2xl shadow-soft-lg p-6 md:p-8 relative;
+  }
+
+  .menu-card::before {
+    content: '';
+    @apply absolute inset-3 border-2 border-charcoal/30 rounded-xl pointer-events-none;
+  }
+
+  /* Decorative food illustrations as pseudo-elements */
+  .decorations {
+    @apply fixed inset-0 pointer-events-none overflow-hidden z-0;
   }
 }
 
 @layer utilities {
   .border-3 {
     border-width: 3px;
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 }

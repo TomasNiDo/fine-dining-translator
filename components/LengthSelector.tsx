@@ -15,11 +15,11 @@ interface LengthSelectorProps {
 
 export function LengthSelector({ value, onChange }: LengthSelectorProps) {
   return (
-    <fieldset className="space-y-2">
-      <legend className="text-sm font-medium text-charcoal">
-        Description Length
+    <fieldset className="space-y-3">
+      <legend className="text-sm font-semibold text-charcoal">
+        Description Verbosity
       </legend>
-      <div className="flex gap-2 overflow-x-auto pb-2 -mb-2">
+      <div className="flex flex-wrap gap-2">
         {LENGTHS.map((length) => (
           <PillButton
             key={length}
@@ -28,6 +28,7 @@ export function LengthSelector({ value, onChange }: LengthSelectorProps) {
             label={LENGTH_LABELS[length]}
             checked={value === length}
             onChange={(v) => onChange(v as DescriptionLength)}
+            variant="butter"
           />
         ))}
       </div>

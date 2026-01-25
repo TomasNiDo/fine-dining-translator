@@ -18,26 +18,24 @@ export function ToggleGroup({
   onTechniquesChange,
 }: ToggleGroupProps) {
   return (
-    <fieldset className="space-y-3">
-      <legend className="text-sm font-medium text-charcoal mb-2">
-        Extra Pretension
-      </legend>
-      <div className="space-y-3">
+    <fieldset className="space-y-4">
+      <legend className="sr-only">Extra Pretension Options</legend>
+      <div className="flex flex-wrap gap-x-6 gap-y-3">
         <Toggle
           id="reveal"
-          label="Add the reveal (It's...)"
+          label="Add the reveal at the end"
           checked={addReveal}
           onChange={onRevealChange}
         />
         <Toggle
           id="chef-ego"
-          label="Add chef ego"
+          label="Extra chef ego"
           checked={addChefEgo}
           onChange={onChefEgoChange}
         />
         <Toggle
           id="techniques"
-          label="Add fancy techniques"
+          label="Add suspiciously specific technique words"
           checked={addTechniques}
           onChange={onTechniquesChange}
         />

@@ -33,15 +33,32 @@ export function MenuCard({ result, isLoading = false }: MenuCardProps) {
       aria-busy={isLoading}
     >
       <div className="space-y-4">
-        <h2 className="text-2xl md:text-3xl font-heading text-charcoal text-center">
-          {result.originalDish}
+        {/* Menu heading */}
+        <h2 className="text-center font-heading text-2xl text-charcoal tracking-wide">
+          Menu
         </h2>
-        <div className="w-16 h-0.5 bg-charcoal/30 mx-auto" />
-        <p className="text-lg leading-relaxed text-charcoal/90 font-heading italic text-center">
+
+        {/* Decorative divider */}
+        <div className="flex items-center justify-center gap-2">
+          <div className="w-8 h-px bg-charcoal/30" />
+          <div className="w-2 h-2 rounded-full bg-charcoal/30" />
+          <div className="w-8 h-px bg-charcoal/30" />
+        </div>
+
+        {/* Generated description */}
+        <p className="text-base md:text-lg leading-relaxed text-charcoal/90 font-body text-center px-2">
           {result.description}
         </p>
 
-        <div className="flex justify-center pt-2">
+        {/* Original dish reveal */}
+        {result.originalDish && (
+          <p className="text-center text-sm text-charcoal/60 italic font-body">
+            (It&apos;s {result.originalDish})
+          </p>
+        )}
+
+        {/* Copy button */}
+        <div className="flex justify-center pt-3">
           <button
             onClick={handleCopy}
             disabled={copyState === "copied"}
@@ -53,15 +70,15 @@ export function MenuCard({ result, isLoading = false }: MenuCardProps) {
                   : "Copy description to clipboard"
             }
             className={`
-              flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
-              transition-all duration-200
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal focus-visible:ring-offset-2
+              flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium
+              border-2 transition-all duration-200
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
               ${
                 copyState === "copied"
-                  ? "bg-green-100 text-green-700 cursor-default"
+                  ? "bg-mint border-charcoal/50 text-charcoal cursor-default focus-visible:ring-mint"
                   : copyState === "error"
-                    ? "bg-red-100 text-red-700 hover:bg-red-200"
-                    : "bg-charcoal/5 text-charcoal/70 hover:bg-charcoal/10 hover:text-charcoal"
+                    ? "bg-blush-light border-charcoal/50 text-charcoal hover:bg-blush focus-visible:ring-blush"
+                    : "bg-white border-charcoal/30 text-charcoal/70 hover:bg-cream hover:border-charcoal/50 hover:text-charcoal focus-visible:ring-charcoal/50"
               }
             `}
           >
@@ -81,13 +98,6 @@ export function MenuCard({ result, isLoading = false }: MenuCardProps) {
                 <span>Copy</span>
               </>
             )}
-            <span className="sr-only">
-              {copyState === "copied"
-                ? "Description copied to clipboard"
-                : copyState === "error"
-                  ? "Failed to copy description. Please try again."
-                  : "Copy description to clipboard"}
-            </span>
           </button>
         </div>
       </div>

@@ -9,7 +9,7 @@ export function Toggle({ id, label, checked, onChange }: ToggleProps) {
   return (
     <label
       htmlFor={id}
-      className="flex items-center gap-3 cursor-pointer select-none"
+      className="inline-flex items-center gap-3 cursor-pointer select-none group"
     >
       <div className="relative">
         <input
@@ -22,22 +22,29 @@ export function Toggle({ id, label, checked, onChange }: ToggleProps) {
         {/* Track */}
         <div
           className={`
-            w-12 h-6 rounded-full transition-colors
-            border-2 border-charcoal
-            ${checked ? "bg-mint" : "bg-gray-200"}
-            peer-focus:ring-2 peer-focus:ring-charcoal peer-focus:ring-offset-2
+            w-14 h-8 rounded-full transition-all duration-200
+            border-2
+            ${
+              checked
+                ? "bg-blush border-charcoal/50"
+                : "bg-white border-charcoal/30 group-hover:border-charcoal/50"
+            }
+            peer-focus:ring-2 peer-focus:ring-blush peer-focus:ring-offset-2
           `}
         />
         {/* Thumb */}
         <div
           className={`
-            absolute top-1 left-1 w-4 h-4 rounded-full bg-charcoal
-            transition-transform duration-200 ease-in-out
-            ${checked ? "translate-x-6" : "translate-x-0"}
+            absolute top-1.5 w-5 h-5 rounded-full bg-charcoal
+            transition-all duration-200 ease-out
+            shadow-sm
+            ${checked ? "left-7" : "left-1.5"}
           `}
         />
       </div>
-      <span className="text-charcoal">{label}</span>
+      <span className="text-sm text-charcoal/80 group-hover:text-charcoal transition-colors">
+        {label}
+      </span>
     </label>
   );
 }
