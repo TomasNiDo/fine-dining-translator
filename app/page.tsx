@@ -8,19 +8,22 @@ import { LengthSelector } from "@/components/LengthSelector";
 import { ToggleGroup } from "@/components/ToggleGroup";
 import { GenerateButton } from "@/components/GenerateButton";
 import { MenuCard } from "@/components/MenuCard";
-import { generateTranslation } from "@/lib/translator";
 import {
   TranslationResult,
   TranslatorOptions,
   RestaurantStyle,
   DescriptionLength,
   defaultOptions,
+  GenerateResponse,
+  GenerateErrorResponse,
+  GenerationError,
 } from "@/lib/types";
 
 export default function Home() {
   const [dishName, setDishName] = useState("");
   const [options, setOptions] = useState<TranslatorOptions>(defaultOptions);
   const [result, setResult] = useState<TranslationResult | null>(null);
+  const [error, setError] = useState<GenerationError | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const updateOption = <K extends keyof TranslatorOptions>(
@@ -32,23 +35,49 @@ export default function Home() {
 
   const handleGenerate = async () => {
     const trimmedDish = dishName.trim();
-    if (!trimmedDish) return;
+    if (!trimmedDish || isGenerating) return;
 
     setIsGenerating(true);
+    setError(null);
 
-    // Simulate a brief delay for perceived "thinking"
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dishName: trimmedDish,
+          options,
+        }),
+      });
 
-    const translationResult = generateTranslation({
-      dishName: trimmedDish,
-      options,
-    });
+      const data: GenerateResponse | GenerateErrorResponse =
+        await response.json();
 
-    setResult(translationResult);
-    setIsGenerating(false);
+      if (data.success) {
+        setResult({
+          originalDish: data.data.originalDish,
+          description: data.data.description,
+          style: data.data.style,
+          generatedAt: new Date(data.data.generatedAt),
+        });
+        setError(null);
+      } else {
+        setError(data.error);
+        setResult(null);
+      }
+    } catch {
+      setError({
+        code: "NETWORK_ERROR",
+        message:
+          "Lost connection to our culinary imagination. Please check your connection and try again.",
+      });
+      setResult(null);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
-  const canGenerate = dishName.trim().length > 0;
+  const canGenerate = dishName.trim().length > 0 && !isGenerating;
 
   return (
     <main className="min-h-screen p-4 md:p-8">
@@ -88,11 +117,17 @@ export default function Home() {
           />
         </div>
 
-        {result && !isGenerating && (
+        {error && !isGenerating && (
+          <div className="card bg-red-50 border-red-200 text-red-800">
+            <p className="text-center">{error.message}</p>
+          </div>
+        )}
+
+        {result && !isGenerating && !error && (
           <MenuCard result={result} isLoading={isGenerating} />
         )}
 
-        {!result && !isGenerating && (
+        {!result && !isGenerating && !error && (
           <p className="text-center text-charcoal/60 italic">
             Enter a dish name above and click &ldquo;Generate
             Masterpiece&rdquo; to begin your culinary journey.

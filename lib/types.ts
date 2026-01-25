@@ -75,3 +75,34 @@ export interface TranslationTemplate {
   style: RestaurantStyle;
   patterns: TemplatePattern[];
 }
+
+// API Request type (sent from client to /api/generate)
+export interface GenerateRequest {
+  dishName: string;
+  options: TranslatorOptions;
+}
+
+// API Response types
+export interface GenerateResponse {
+  success: true;
+  data: {
+    originalDish: string;
+    description: string;
+    style: RestaurantStyle;
+    generatedAt: string; // ISO 8601 timestamp
+  };
+}
+
+export interface GenerateErrorResponse {
+  success: false;
+  error: {
+    code: string;
+    message: string;
+  };
+}
+
+// Client-side error state
+export interface GenerationError {
+  code: string;
+  message: string;
+}
