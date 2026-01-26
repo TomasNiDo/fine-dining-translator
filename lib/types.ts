@@ -131,3 +131,38 @@ export interface GenerationError {
   code: string;
   message: string;
 }
+
+// ============================================================================
+// Security Types (007-api-security)
+// ============================================================================
+
+// Rate limiting types
+export interface RateLimitRecord {
+  count: number;
+  windowStart: number;
+}
+
+export interface RateLimitResult {
+  allowed: boolean;
+  remaining: number;
+  retryAfter?: number;
+  resetTime: number; // Unix timestamp when window resets
+}
+
+export interface RateLimitConfig {
+  limit: number; // Max requests per window (default: 10)
+  windowMs: number; // Window duration in ms (default: 60000)
+}
+
+// Security logging types
+export type SecurityEventType =
+  | "RATE_LIMIT_EXCEEDED"
+  | "VALIDATION_FAILED"
+  | "SUSPICIOUS_INPUT";
+
+export interface SecurityEvent {
+  type: SecurityEventType;
+  timestamp: string;
+  ipHash: string;
+  details: Record<string, unknown>;
+}

@@ -1,0 +1,203 @@
+openapi: 3.0.3
+info:
+  title: Fine Dining Translator API
+  description: API for transforming ordinary dish names into pretentious fine dining descriptions
+  version: 1.1.0
+
+servers:
+  - url: /api
+    description: Next.js API routes
+
+paths:
+  /generate:
+    post:
+      summary: Generate fine dining description
+      description: |
+        Transforms a dish name into a pretentious fine dining description.
+        Subject to rate limiting (10 requests per minute per IP).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateRequest'
+      responses:
+        '200':
+          description: Successfully generated description
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: Maximum requests allowed per window
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Requests remaining in current window
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when window resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateResponse'
+        '400':
+          description: Invalid input (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                emptyDish:
+                  summary: Empty dish name
+                  value:
+                    success: false
+                    error:
+                      code: "DISH_NAME_REQUIRED"
+                      message: "Please enter a dish name to transform."
+                tooLong:
+                  summary: Dish name too long
+                  value:
+                    success: false
+                    error:
+                      code: "DISH_NAME_TOO_LONG"
+                      message: "That dish name is quite the mouthful! Please keep it under 200 characters."
+        '429':
+          description: Rate limit exceeded
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds until the client can retry
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: Maximum requests allowed per window
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                enum: [0]
+              description: Always 0 when rate limited
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+              description: Unix timestamp when window resets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error:
+                  code: "RATE_LIMITED"
+                  message: "The kitchen needs a breather! Please wait a moment before your next order."
+        '500':
+          description: Server error (AI service unavailable)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    GenerateRequest:
+      type: object
+      required:
+        - dishName
+        - options
+      properties:
+        dishName:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: The dish name to transform
+          example: "grilled cheese sandwich"
+        options:
+          $ref: '#/components/schemas/TranslatorOptions'
+
+    TranslatorOptions:
+      type: object
+      required:
+        - style
+        - length
+        - addReveal
+        - addChefEgo
+        - addTechniques
+      properties:
+        style:
+          type: string
+          enum: [cafe, gastropub, bistro, steakhouse, michelin, tasting-menu]
+          description: Restaurant style affecting tone
+        length:
+          type: string
+          enum: [short, medium, excessive, absolutely-unnecessary]
+          description: Verbosity level of description
+        addReveal:
+          type: boolean
+          description: Add sarcastic reveal at end
+        addChefEgo:
+          type: boolean
+          description: Add chef attribution phrases
+        addTechniques:
+          type: boolean
+          description: Include fancy cooking techniques
+
+    GenerateResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          type: object
+          required:
+            - originalDish
+            - description
+            - style
+            - generatedAt
+          properties:
+            originalDish:
+              type: string
+              description: The original dish name submitted
+            description:
+              type: string
+              description: The generated fine dining description
+            style:
+              type: string
+              description: The style used for generation
+            generatedAt:
+              type: string
+              format: date-time
+              description: ISO 8601 timestamp of generation
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          enum: [false]
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+              enum:
+                - INVALID_INPUT
+                - DISH_NAME_REQUIRED
+                - DISH_NAME_TOO_LONG
+                - RATE_LIMITED
+                - AI_SERVICE_ERROR
+                - AI_TIMEOUT
+            message:
+              type: string
+              description: Human-readable error message (playful tone)
