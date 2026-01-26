@@ -1,12 +1,16 @@
+import { Tooltip } from "@/components/ui/Tooltip";
+
 interface ToggleProps {
   id: string;
   label: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  tooltip?: string;
+  tooltipId?: string;
 }
 
-export function Toggle({ id, label, checked, onChange }: ToggleProps) {
-  return (
+export function Toggle({ id, label, checked, onChange, tooltip, tooltipId }: ToggleProps) {
+  const toggleContent = (
     <div className="relative flex items-center gap-2">
       <input
         type="checkbox"
@@ -41,4 +45,14 @@ export function Toggle({ id, label, checked, onChange }: ToggleProps) {
       />
     </div>
   );
+
+  if (tooltip && tooltipId) {
+    return (
+      <Tooltip content={tooltip} id={tooltipId}>
+        {toggleContent}
+      </Tooltip>
+    );
+  }
+
+  return toggleContent;
 }

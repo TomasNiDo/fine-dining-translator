@@ -16,7 +16,7 @@ const FEW_SHOT_EXAMPLES: FewShotExample[] = [
     style: "bistro",
     length: "excessive",
     outputWithReveal:
-      "Butter-lacquered rustic bread duo, melted dairy embrace, pan-coaxed to golden confidence, with the humble reveal: grilled cheese",
+      "Butter-lacquered rustic bread duo, melted dairy embrace, pan-coaxed to golden confidence, finished with a whisper of sea salt—but let's be honest, it's just grilled cheese.",
     outputWithoutReveal:
       "Butter-lacquered rustic bread duo, melted dairy embrace, pan-coaxed to golden confidence, finished with a whisper of sea salt",
   },
@@ -25,7 +25,7 @@ const FEW_SHOT_EXAMPLES: FewShotExample[] = [
     style: "cafe",
     length: "medium",
     outputWithReveal:
-      "Oceanic protein folded with creamy brightness, herb-flecked and leisurely seasoned, served with the truth: tuna salad",
+      "Oceanic protein folded with creamy brightness, herb-flecked and leisurely seasoned, or as your grandmother would call it, tuna salad.",
     outputWithoutReveal:
       "Oceanic protein folded with creamy brightness, herb-flecked and leisurely seasoned, resting on a bed of artisanal greens",
   },
@@ -34,7 +34,7 @@ const FEW_SHOT_EXAMPLES: FewShotExample[] = [
     style: "tasting-menu",
     length: "excessive",
     outputWithReveal:
-      "Pink-salt brined heritage protein, peppercorn-lifted and bay-leaf haunted, slow-submerged until it softens emotionally, then the reveal: corned beef",
+      "Pink-salt brined heritage protein, peppercorn-lifted and bay-leaf haunted, slow-submerged until it softens emotionally, which is a fancy way of saying corned beef.",
     outputWithoutReveal:
       "Pink-salt brined heritage protein, peppercorn-lifted and bay-leaf haunted, slow-submerged until it softens emotionally, accompanied by root vegetable meditations",
   },
@@ -88,7 +88,7 @@ const LENGTH_INSTRUCTIONS: Record<DescriptionLength, string> = {
 
 // Toggle instruction builders
 function getRevealInstruction(dishName: string): string {
-  return `End with a parenthetical reveal like "(It's just ${dishName.toLowerCase()}.)" or "(Yes, it's ${dishName.toLowerCase()}.)".`;
+  return `End the description with a dramatic, sarcastic reveal woven naturally into the sentence that punctures all the pretension. Examples: "...but let's be honest, it's just ${dishName.toLowerCase()}.", "...which is a fancy way of saying ${dishName.toLowerCase()}.", "...or as your grandmother would call it, ${dishName.toLowerCase()}.", "...yes, we're talking about ${dishName.toLowerCase()}." No parentheses—make the reveal flow as part of the final sentence like a comedian's punchline.`;
 }
 
 function getChefEgoInstruction(): string {

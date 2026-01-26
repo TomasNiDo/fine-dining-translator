@@ -1,3 +1,5 @@
+import { Tooltip } from "@/components/ui/Tooltip";
+
 interface PillButtonProps {
   name: string;
   value: string;
@@ -6,6 +8,8 @@ interface PillButtonProps {
   onChange: (value: string) => void;
   variant?: "default" | "tasting";
   showDropdown?: boolean;
+  tooltip?: string;
+  tooltipId?: string;
 }
 
 export function PillButton({
@@ -16,6 +20,8 @@ export function PillButton({
   onChange,
   variant = "default",
   showDropdown = false,
+  tooltip,
+  tooltipId,
 }: PillButtonProps) {
   const baseStyles = `
     inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full
@@ -28,7 +34,7 @@ export function PillButton({
     ? "bg-butter text-charcoal"
     : "bg-white text-charcoal hover:bg-[#f5f5f5]";
 
-  return (
+  const buttonContent = (
     <label className="cursor-pointer">
       <input
         type="radio"
@@ -49,4 +55,14 @@ export function PillButton({
       </span>
     </label>
   );
+
+  if (tooltip && tooltipId) {
+    return (
+      <Tooltip content={tooltip} id={tooltipId}>
+        {buttonContent}
+      </Tooltip>
+    );
+  }
+
+  return buttonContent;
 }

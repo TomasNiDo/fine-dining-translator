@@ -92,8 +92,8 @@ export default function Home() {
   return (
     <>
       <Decorations />
-      <main className="min-h-screen p-4 md:p-8 lg:p-10 relative z-10">
-        <div className="max-w-[800px] mx-auto">
+      <main className="min-h-screen p-4 md:p-8 lg:p-10 relative z-10 flex flex-col">
+        <div className="max-w-[800px] mx-auto w-full flex-1 flex flex-col">
           <Header />
 
           {/* Input Section */}

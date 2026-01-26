@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="flex flex-wrap justify-between items-center gap-4 mt-6 text-sm">
+    <footer className="flex flex-wrap justify-between items-center gap-4 mt-auto pt-8 text-sm">
       {/* Links */}
       <div className="flex gap-6">
         <a

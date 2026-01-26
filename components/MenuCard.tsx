@@ -20,7 +20,8 @@ function CornerFlourish({ className }: { className: string }) {
   );
 }
 
-// Whisk decoration SVG
+// Whisk decoration SVG (unused but kept for potential future use)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function WhiskDecoration() {
   return (
     <svg className="w-8 h-8 mx-auto mt-4 text-tan-outline" viewBox="0 0 40 50" fill="none">

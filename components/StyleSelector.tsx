@@ -1,4 +1,4 @@
-import { RestaurantStyle, STYLE_LABELS } from "@/lib/types";
+import { RestaurantStyle, STYLE_LABELS, STYLE_TOOLTIPS } from "@/lib/types";
 import { PillButton } from "@/components/ui/PillButton";
 import { ChefHatIcon } from "@/components/ui/ChefHatIcon";
 
@@ -28,6 +28,8 @@ export function StyleSelector({ value, onChange }: StyleSelectorProps) {
             label={STYLE_LABELS[style]}
             checked={value === style}
             onChange={(v) => onChange(v as RestaurantStyle)}
+            tooltip={STYLE_TOOLTIPS[style]}
+            tooltipId={`tooltip-${style}`}
           />
         ))}
       </div>
@@ -44,6 +46,8 @@ export function StyleSelector({ value, onChange }: StyleSelectorProps) {
             checked={value === style}
             onChange={(v) => onChange(v as RestaurantStyle)}
             variant={style === "tasting-menu" ? "tasting" : "default"}
+            tooltip={STYLE_TOOLTIPS[style]}
+            tooltipId={`tooltip-${style}`}
           />
         ))}
       </div>

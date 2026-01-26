@@ -1,5 +1,6 @@
 import { Toggle } from "@/components/ui/Toggle";
 import { ChefHatIcon } from "@/components/ui/ChefHatIcon";
+import { TOGGLE_TOOLTIPS } from "@/lib/types";
 
 type ToggleVariant = "mint" | "pink" | "butter";
 
@@ -57,6 +58,8 @@ export function ToggleGroup({
             label="Add the reveal<br>at the end 🤫"
             checked={addReveal}
             onChange={onRevealChange}
+            tooltip={TOGGLE_TOOLTIPS.reveal}
+            tooltipId="tooltip-reveal"
           />
         </ToggleBox>
 
@@ -66,6 +69,8 @@ export function ToggleGroup({
             label="Extra chef ego"
             checked={addChefEgo}
             onChange={onChefEgoChange}
+            tooltip={TOGGLE_TOOLTIPS.chefEgo}
+            tooltipId="tooltip-chef-ego"
           />
         </ToggleBox>
 
@@ -75,6 +80,8 @@ export function ToggleGroup({
             label="Add suspiciously specific<br>technique words 🤔"
             checked={addTechniques}
             onChange={onTechniquesChange}
+            tooltip={TOGGLE_TOOLTIPS.techniques}
+            tooltipId="tooltip-techniques"
           />
         </ToggleBox>
       </div>

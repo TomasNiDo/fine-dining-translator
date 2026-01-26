@@ -1,4 +1,4 @@
-import { DescriptionLength, LENGTH_LABELS } from "@/lib/types";
+import { DescriptionLength, LENGTH_LABELS, LENGTH_TOOLTIPS } from "@/lib/types";
 import { PillButton } from "@/components/ui/PillButton";
 
 const LENGTHS: DescriptionLength[] = [
@@ -28,6 +28,8 @@ export function LengthSelector({ value, onChange }: LengthSelectorProps) {
             label={LENGTH_LABELS[length]}
             checked={value === length}
             onChange={(v) => onChange(v as DescriptionLength)}
+            tooltip={LENGTH_TOOLTIPS[length]}
+            tooltipId={`tooltip-${length}`}
           />
         ))}
       </div>
