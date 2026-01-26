@@ -7,44 +7,38 @@ interface ToggleProps {
 
 export function Toggle({ id, label, checked, onChange }: ToggleProps) {
   return (
-    <label
-      htmlFor={id}
-      className="inline-flex items-center gap-3 cursor-pointer select-none group"
-    >
-      <div className="relative">
-        <input
-          type="checkbox"
-          id={id}
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-          className="sr-only peer"
-        />
-        {/* Track */}
-        <div
-          className={`
-            w-14 h-8 rounded-full transition-all duration-200
-            border-2
-            ${
-              checked
-                ? "bg-blush border-charcoal/50"
-                : "bg-white border-charcoal/30 group-hover:border-charcoal/50"
-            }
-            peer-focus:ring-2 peer-focus:ring-blush peer-focus:ring-offset-2
-          `}
-        />
+    <div className="relative flex items-center gap-2">
+      <input
+        type="checkbox"
+        id={id}
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="sr-only peer"
+      />
+      {/* Track */}
+      <div
+        className={`
+          relative w-10 h-[1.375rem] rounded-full
+          border-2 border-charcoal
+          transition-colors duration-200 cursor-pointer
+          ${checked ? "bg-toggle-pink" : "bg-white"}
+        `}
+        onClick={() => onChange(!checked)}
+      >
         {/* Thumb */}
         <div
           className={`
-            absolute top-1.5 w-5 h-5 rounded-full bg-charcoal
-            transition-all duration-200 ease-out
-            shadow-sm
-            ${checked ? "left-7" : "left-1.5"}
+            absolute top-0.5 w-[0.95rem] h-[0.95rem] rounded-full bg-charcoal
+            transition-transform duration-200 ease-out
+            ${checked ? "translate-x-[1.1rem]" : "translate-x-0.5"}
           `}
         />
       </div>
-      <span className="text-sm text-charcoal/80 group-hover:text-charcoal transition-colors">
-        {label}
-      </span>
-    </label>
+      <label
+        htmlFor={id}
+        className="text-[0.8rem] text-charcoal leading-tight cursor-pointer"
+        dangerouslySetInnerHTML={{ __html: label }}
+      />
+    </div>
   );
 }

@@ -1,10 +1,10 @@
 export function Header() {
   return (
-    <header className="text-center space-y-3 relative z-10">
-      <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl text-charcoal tracking-tight">
+    <header className="text-center space-y-2 relative z-10 mb-6">
+      <h1 className="font-heading text-[2.5rem] md:text-[3rem] text-charcoal font-bold">
         Fine Dining Translator
       </h1>
-      <p className="text-base md:text-lg text-charcoal/70 max-w-md mx-auto">
+      <p className="text-[1.05rem] text-[#555]">
         Turn your simple dish into a pretentious menu masterpiece.
       </p>
     </header>

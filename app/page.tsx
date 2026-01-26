@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { DishInput } from "@/components/DishInput";
 import { StyleSelector } from "@/components/StyleSelector";
@@ -27,6 +27,14 @@ export default function Home() {
   const [result, setResult] = useState<TranslationResult | null>(null);
   const [error, setError] = useState<GenerationError | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const resultCardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to result card when generation completes
+  useEffect(() => {
+    if (result && !isGenerating && resultCardRef.current) {
+      resultCardRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [result, isGenerating]);
 
   const updateOption = <K extends keyof TranslatorOptions>(
     key: K,
@@ -84,40 +92,44 @@ export default function Home() {
   return (
     <>
       <Decorations />
-      <main className="min-h-screen p-4 md:p-8 relative z-10">
-        <div className="max-w-2xl mx-auto space-y-8">
+      <main className="min-h-screen p-4 md:p-8 lg:p-10 relative z-10">
+        <div className="max-w-[800px] mx-auto">
           <Header />
 
-          <div className="card space-y-6">
-            <DishInput value={dishName} onChange={setDishName} />
+          {/* Input Section */}
+          <DishInput value={dishName} onChange={setDishName} />
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <StyleSelector
-                value={options.style}
-                onChange={(style: RestaurantStyle) =>
-                  updateOption("style", style)
-                }
-              />
-
-              <LengthSelector
-                value={options.length}
-                onChange={(length: DescriptionLength) =>
-                  updateOption("length", length)
-                }
-              />
-            </div>
-
-            <ToggleGroup
-              addReveal={options.addReveal}
-              addChefEgo={options.addChefEgo}
-              addTechniques={options.addTechniques}
-              onRevealChange={(checked) => updateOption("addReveal", checked)}
-              onChefEgoChange={(checked) => updateOption("addChefEgo", checked)}
-              onTechniquesChange={(checked) =>
-                updateOption("addTechniques", checked)
+          {/* Options Section */}
+          <div className="grid sm:grid-cols-[1.2fr_1fr] gap-5 md:gap-8 mb-5">
+            <StyleSelector
+              value={options.style}
+              onChange={(style: RestaurantStyle) =>
+                updateOption("style", style)
               }
             />
 
+            <LengthSelector
+              value={options.length}
+              onChange={(length: DescriptionLength) =>
+                updateOption("length", length)
+              }
+            />
+          </div>
+
+          {/* Toggle Section */}
+          <ToggleGroup
+            addReveal={options.addReveal}
+            addChefEgo={options.addChefEgo}
+            addTechniques={options.addTechniques}
+            onRevealChange={(checked) => updateOption("addReveal", checked)}
+            onChefEgoChange={(checked) => updateOption("addChefEgo", checked)}
+            onTechniquesChange={(checked) =>
+              updateOption("addTechniques", checked)
+            }
+          />
+
+          {/* Generate Button */}
+          <div className="mb-6">
             <GenerateButton
               onClick={handleGenerate}
               disabled={!canGenerate}
@@ -125,20 +137,25 @@ export default function Home() {
             />
           </div>
 
+          {/* Error message */}
           {error && !isGenerating && (
-            <div className="card bg-blush-light/50 border-blush text-charcoal">
+            <div className="bg-blush-light/50 border-2 border-blush rounded-lg p-4 mb-6 text-charcoal">
               <p className="text-center">{error.message}</p>
             </div>
           )}
 
+          {/* Result Card */}
           {result && !isGenerating && !error && (
-            <MenuCard result={result} isLoading={isGenerating} />
+            <div ref={resultCardRef}>
+              <MenuCard result={result} isLoading={isGenerating} />
+            </div>
           )}
 
+          {/* Placeholder text */}
           {!result && !isGenerating && !error && (
-            <p className="text-center text-charcoal/50 italic text-sm">
+            <p className="text-center text-[#888] italic text-[0.9rem] mb-6">
               Enter a dish name above and click &ldquo;Generate
-              Masterpiece&rdquo; to begin your culinary journey.
+              Masterpiece&rdquo; to begin.
             </p>
           )}
 

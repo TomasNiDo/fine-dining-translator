@@ -11,6 +11,29 @@ interface MenuCardProps {
 
 type CopyState = "idle" | "copied" | "error";
 
+// Corner flourish star/diamond SVG
+function CornerFlourish({ className }: { className: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L14 8L20 6L16 12L22 14L16 16L20 22L14 18L12 24L10 18L4 22L8 16L2 14L8 12L4 6L10 8L12 2Z" />
+    </svg>
+  );
+}
+
+// Whisk decoration SVG
+function WhiskDecoration() {
+  return (
+    <svg className="w-8 h-8 mx-auto mt-4 text-tan-outline" viewBox="0 0 40 50" fill="none">
+      <path d="M20 0 L20 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M20 18 Q8 28, 6 45" stroke="currentColor" strokeWidth="2" fill="none" />
+      <path d="M20 18 Q13 30, 12 45" stroke="currentColor" strokeWidth="2" fill="none" />
+      <path d="M20 18 L20 45" stroke="currentColor" strokeWidth="2" />
+      <path d="M20 18 Q27 30, 28 45" stroke="currentColor" strokeWidth="2" fill="none" />
+      <path d="M20 18 Q32 28, 34 45" stroke="currentColor" strokeWidth="2" fill="none" />
+    </svg>
+  );
+}
+
 export function MenuCard({ result, isLoading = false }: MenuCardProps) {
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
@@ -27,38 +50,31 @@ export function MenuCard({ result, isLoading = false }: MenuCardProps) {
 
   return (
     <div
-      className="menu-card"
+      className="bg-cream-light border-2 border-charcoal rounded-lg p-5"
       role="region"
       aria-label="Translation result"
       aria-busy={isLoading}
     >
-      <div className="space-y-4">
+      {/* Inner card with decorative border */}
+      <div className="bg-white border-2 border-[#8B7355] rounded p-6 relative">
+        {/* Corner flourishes */}
+        <CornerFlourish className="absolute top-2 left-2 w-6 h-6 text-[#8B7355]" />
+        <CornerFlourish className="absolute top-2 right-2 w-6 h-6 text-[#8B7355] -scale-x-100" />
+        <CornerFlourish className="absolute bottom-2 left-2 w-6 h-6 text-[#8B7355] -scale-y-100" />
+        <CornerFlourish className="absolute bottom-2 right-2 w-6 h-6 text-[#8B7355] scale-[-1]" />
+
         {/* Menu heading */}
-        <h2 className="text-center font-heading text-2xl text-charcoal tracking-wide">
+        <h2 className="text-center font-heading text-[1.5rem] font-bold text-charcoal mb-4">
           Menu
         </h2>
 
-        {/* Decorative divider */}
-        <div className="flex items-center justify-center gap-2">
-          <div className="w-8 h-px bg-charcoal/30" />
-          <div className="w-2 h-2 rounded-full bg-charcoal/30" />
-          <div className="w-8 h-px bg-charcoal/30" />
-        </div>
-
         {/* Generated description */}
-        <p className="text-base md:text-lg leading-relaxed text-charcoal/90 font-body text-center px-2">
+        <p className="text-center text-base leading-[1.7] text-[#444] px-4">
           {result.description}
         </p>
 
-        {/* Original dish reveal */}
-        {result.originalDish && (
-          <p className="text-center text-sm text-charcoal/60 italic font-body">
-            (It&apos;s {result.originalDish})
-          </p>
-        )}
-
         {/* Copy button */}
-        <div className="flex justify-center pt-3">
+        <div className="flex justify-center pt-4">
           <button
             onClick={handleCopy}
             disabled={copyState === "copied"}

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fine Dining Translator - Variant D (Reference Match)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Color Palette - Matching Reference */
+    :root {
+      --cream: #FDF6E3;
+      --cream-light: #FFFEF9;
+      --mint: #B8D4B8;
+      --mint-light: #D4E8D4;
+      --mint-dark: #8FBF8F;
+      --coral: #E8A87C;
+      --coral-dark: #D4956A;
+      --butter: #F5E6A3;
+      --butter-light: #FFF8DC;
+      --blush: #F5B5C8;
+      --blush-light: #FADADD;
+      --lavender: #E6D5F2;
+      --sky: #B5D4E8;
+      --peach: #FFDAB9;
+      --charcoal: #2D2A26;
+      --charcoal-80: rgba(45, 42, 38, 0.8);
+      --charcoal-50: rgba(45, 42, 38, 0.5);
+      --charcoal-30: rgba(45, 42, 38, 0.3);
+      --white: #FFFFFF;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--cream);
+      color: var(--charcoal);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .font-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    /* ================================
+       FLOATING FOOD DECORATIONS
+       ================================ */
+    .decorations {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .decoration {
+      position: absolute;
+    }
+
+    /* Animation keyframes */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+
+    @keyframes float-reverse {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(-3deg); }
+    }
+
+    @keyframes float-slow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .animate-float { animation: float 5s ease-in-out infinite; }
+    .animate-float-reverse { animation: float-reverse 6s ease-in-out infinite; }
+    .animate-float-slow { animation: float-slow 7s ease-in-out infinite; }
+
+    /* ================================
+       MAIN LAYOUT
+       ================================ */
+    main {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+      main { padding: 2rem; }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ================================
+       HEADER
+       ================================ */
+    .header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .header h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .header h1 { font-size: 2.75rem; }
+    }
+
+    .header p {
+      color: var(--charcoal-80);
+      font-size: 1rem;
+    }
+
+    /* ================================
+       MAIN CARD
+       ================================ */
+    .card {
+      background: linear-gradient(135deg, var(--cream-light) 0%, var(--cream) 100%);
+      border: 3px solid var(--charcoal);
+      border-radius: 1.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    @media (min-width: 768px) {
+      .card { padding: 2rem; }
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* ================================
+       INPUT SECTION (Mint Box)
+       ================================ */
+    .input-section {
+      background: linear-gradient(135deg, var(--mint-light) 0%, var(--mint) 100%);
+      border: 3px solid var(--charcoal);
+      border-radius: 1.25rem;
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .input-icon-box {
+      background: var(--white);
+      border: 2px solid var(--charcoal);
+      border-radius: 0.75rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .input-icon-box svg {
+      width: 1.75rem;
+      height: 1.75rem;
+      color: var(--coral);
+    }
+
+    .input-wrapper {
+      flex: 1;
+    }
+
+    .input-wrapper label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: var(--charcoal);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 2px solid var(--charcoal);
+      border-radius: 0.625rem;
+      background: var(--white);
+      color: var(--charcoal);
+      transition: box-shadow 0.2s;
+    }
+
+    .input-field:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(184, 212, 184, 0.5);
+    }
+
+    .input-field::placeholder {
+      color: var(--charcoal-50);
+    }
+
+    /* ================================
+       OPTIONS GRID
+       ================================ */
+    .options-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .option-group h3 {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      color: var(--charcoal);
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* Establishment Pills (Mint) */
+    .pill-mint {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      font-family: inherit;
+      border: 2px solid var(--charcoal-80);
+      border-radius: 9999px;
+      background: var(--white);
+      color: var(--charcoal);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill-mint:hover {
+      background: var(--mint-light);
+      border-color: var(--charcoal);
+    }
+
+    .pill-mint.selected {
+      background: var(--mint);
+      border-color: var(--charcoal);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Special dropdown-style pill */
+    .pill-dropdown {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      font-family: inherit;
+      border: 2px solid var(--charcoal-80);
+      border-radius: 9999px;
+      background: var(--butter);
+      color: var(--charcoal);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pill-dropdown svg {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+
+    /* Verbosity Pills (Butter) */
+    .pill-butter {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      font-family: inherit;
+      border: 2px solid var(--charcoal-80);
+      border-radius: 9999px;
+      background: var(--white);
+      color: var(--charcoal);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill-butter:hover {
+      background: var(--butter-light);
+      border-color: var(--charcoal);
+    }
+
+    .pill-butter.selected {
+      background: var(--butter);
+      border-color: var(--charcoal);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ================================
+       TOGGLE SECTION
+       ================================ */
+    .toggle-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .toggle-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      border: 2px solid var(--charcoal);
+      border-radius: 9999px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s;
+    }
+
+    .toggle-box:hover {
+      transform: translateY(-1px);
+    }
+
+    .toggle-box.mint-bg {
+      background: linear-gradient(135deg, var(--mint-light) 0%, var(--mint) 100%);
+    }
+
+    .toggle-box.blush-bg {
+      background: linear-gradient(135deg, var(--blush-light) 0%, var(--blush) 100%);
+    }
+
+    .toggle-box.butter-bg {
+      background: linear-gradient(135deg, var(--butter-light) 0%, var(--butter) 100%);
+    }
+
+    .toggle-track {
+      position: relative;
+      width: 2.75rem;
+      height: 1.5rem;
+      border-radius: 9999px;
+      border: 2px solid var(--charcoal);
+      background: var(--white);
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle-track.active {
+      background: var(--mint-dark);
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 0.125rem;
+      left: 0.125rem;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 9999px;
+      background: var(--charcoal);
+      transition: transform 0.2s ease-out;
+    }
+
+    .toggle-track.active .toggle-thumb {
+      transform: translateX(1.25rem);
+    }
+
+    .toggle-label {
+      font-size: 0.8125rem;
+      color: var(--charcoal);
+      line-height: 1.3;
+    }
+
+    .toggle-input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ================================
+       GENERATE BUTTON
+       ================================ */
+    .generate-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--charcoal);
+      background: var(--coral);
+      border: 3px solid var(--charcoal);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 0 4px 0 var(--coral-dark);
+    }
+
+    .generate-btn:hover {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 var(--coral-dark);
+    }
+
+    .generate-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 var(--coral-dark);
+    }
+
+    .generate-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* ================================
+       MENU OUTPUT CARD
+       ================================ */
+    .menu-card {
+      background: var(--white);
+      border: 3px solid var(--charcoal);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      .menu-card { padding: 2rem; }
+    }
+
+    /* Inner decorative border */
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      inset: 0.75rem;
+      border: 2px solid var(--charcoal-30);
+      border-radius: 0.5rem;
+      pointer-events: none;
+    }
+
+    .menu-header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .menu-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .menu-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+
+    .menu-divider-line {
+      width: 2rem;
+      height: 1px;
+      background: var(--charcoal-30);
+    }
+
+    .menu-divider-dot {
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: 9999px;
+      background: var(--charcoal-30);
+    }
+
+    .menu-description {
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--charcoal-80);
+      padding: 0 0.5rem;
+    }
+
+    .menu-reveal {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--charcoal-50);
+      font-style: italic;
+      margin-top: 0.75rem;
+    }
+
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1rem auto 0;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--charcoal-80);
+      background: var(--white);
+      border: 2px solid var(--charcoal-30);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--cream);
+      border-color: var(--charcoal-50);
+      color: var(--charcoal);
+    }
+
+    .copy-btn.copied {
+      background: var(--mint);
+      border-color: var(--charcoal);
+    }
+
+    .copy-btn svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* ================================
+       FOOTER
+       ================================ */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .footer-links a {
+      color: var(--charcoal-80);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--charcoal);
+      text-decoration: underline;
+    }
+
+    .footer-copyright {
+      color: var(--charcoal-50);
+    }
+
+    /* Placeholder */
+    .placeholder-text {
+      text-align: center;
+      color: var(--charcoal-50);
+      font-style: italic;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <!-- ================================
+       FLOATING FOOD DECORATIONS
+       ================================ -->
+  <div class="decorations" aria-hidden="true">
+
+    <!-- TOP LEFT: Cake Slice -->
+    <svg class="decoration animate-float" style="top: 2%; left: 2%; width: 100px; height: 100px;" viewBox="0 0 100 100" fill="none">
+      <!-- Cake base -->
+      <path d="M20 85 L30 35 L70 35 L80 85 Z" fill="#FADADD" stroke="#2D2A26" stroke-width="2"/>
+      <!-- Frosting layers -->
+      <path d="M32 50 L68 50" stroke="#F5B5C8" stroke-width="6" stroke-linecap="round"/>
+      <path d="M34 65 L66 65" stroke="#FFF8DC" stroke-width="5" stroke-linecap="round"/>
+      <!-- Top frosting swirl -->
+      <ellipse cx="50" cy="35" rx="22" ry="8" fill="#F5B5C8" stroke="#2D2A26" stroke-width="2"/>
+      <!-- Cherry on top -->
+      <circle cx="50" cy="25" r="6" fill="#E8A87C" stroke="#2D2A26" stroke-width="1.5"/>
+      <path d="M50 19 Q55 12, 52 8" stroke="#4A7C59" stroke-width="1.5" fill="none"/>
+      <!-- Sprinkles -->
+      <circle cx="38" cy="45" r="2" fill="#B8D4B8"/>
+      <circle cx="55" cy="55" r="2" fill="#F5E6A3"/>
+      <circle cx="62" cy="42" r="1.5" fill="#E8A87C"/>
+      <circle cx="45" cy="72" r="2" fill="#B5D4E8"/>
+    </svg>
+
+    <!-- TOP RIGHT: Croissant -->
+    <svg class="decoration animate-float-reverse" style="top: 3%; right: 3%; width: 120px; height: 90px;" viewBox="0 0 120 90" fill="none">
+      <!-- Main croissant body -->
+      <path d="M10 55 Q20 20, 60 25 Q100 30, 110 50 Q95 70, 60 65 Q25 60, 10 55" fill="#F5E6A3" stroke="#2D2A26" stroke-width="2.5"/>
+      <!-- Croissant ridges -->
+      <path d="M25 50 Q45 35, 55 40" stroke="#D4956A" stroke-width="2" fill="none"/>
+      <path d="M40 55 Q60 42, 75 48" stroke="#D4956A" stroke-width="2" fill="none"/>
+      <path d="M55 58 Q75 48, 95 52" stroke="#D4956A" stroke-width="2" fill="none"/>
+      <!-- Shine highlights -->
+      <ellipse cx="45" cy="38" rx="8" ry="3" fill="#FFF8DC" opacity="0.6"/>
+      <ellipse cx="80" cy="45" rx="6" ry="2" fill="#FFF8DC" opacity="0.5"/>
+    </svg>
+
+    <!-- LEFT SIDE: Blue Abstract Blob -->
+    <svg class="decoration animate-float-slow" style="top: 30%; left: -20px; width: 140px; height: 160px;" viewBox="0 0 140 160" fill="none">
+      <path d="M70 20 Q110 30, 120 70 Q130 110, 90 140 Q50 160, 30 120 Q10 80, 30 50 Q50 20, 70 20" fill="#B5D4E8" stroke="#2D2A26" stroke-width="2"/>
+      <!-- Inner details -->
+      <circle cx="70" cy="80" r="15" fill="#D4E8F0" opacity="0.5"/>
+      <circle cx="55" cy="110" r="8" fill="#D4E8F0" opacity="0.4"/>
+    </svg>
+
+    <!-- RIGHT SIDE: Macaron Stack -->
+    <svg class="decoration animate-float" style="top: 40%; right: -10px; width: 90px; height: 130px;" viewBox="0 0 90 130" fill="none">
+      <!-- Pink macaron (top) -->
+      <ellipse cx="45" cy="25" rx="30" ry="12" fill="#F5B5C8" stroke="#2D2A26" stroke-width="2"/>
+      <rect x="15" y="23" width="60" height="10" fill="#FADADD"/>
+      <ellipse cx="45" cy="35" rx="30" ry="12" fill="#F5B5C8" stroke="#2D2A26" stroke-width="2"/>
+
+      <!-- Green macaron (middle) -->
+      <ellipse cx="45" cy="55" rx="30" ry="12" fill="#B8D4B8" stroke="#2D2A26" stroke-width="2"/>
+      <rect x="15" y="53" width="60" height="10" fill="#D4E8D4"/>
+      <ellipse cx="45" cy="65" rx="30" ry="12" fill="#B8D4B8" stroke="#2D2A26" stroke-width="2"/>
+
+      <!-- Yellow macaron (bottom) -->
+      <ellipse cx="45" cy="85" rx="30" ry="12" fill="#F5E6A3" stroke="#2D2A26" stroke-width="2"/>
+      <rect x="15" y="83" width="60" height="10" fill="#FFF8DC"/>
+      <ellipse cx="45" cy="95" rx="30" ry="12" fill="#F5E6A3" stroke="#2D2A26" stroke-width="2"/>
+    </svg>
+
+    <!-- BOTTOM LEFT: Cupcake -->
+    <svg class="decoration animate-float-reverse" style="bottom: 8%; left: 3%; width: 90px; height: 110px;" viewBox="0 0 90 110" fill="none">
+      <!-- Cupcake wrapper -->
+      <path d="M20 55 L28 100 L62 100 L70 55" fill="#E8A87C" stroke="#2D2A26" stroke-width="2"/>
+      <!-- Wrapper ridges -->
+      <path d="M25 62 L65 62" stroke="#2D2A26" stroke-width="1"/>
+      <path d="M27 75 L63 75" stroke="#2D2A26" stroke-width="1"/>
+      <path d="M29 88 L61 88" stroke="#2D2A26" stroke-width="1"/>
+      <!-- Frosting swirl -->
+      <path d="M15 55 Q25 25, 45 30 Q65 35, 75 55 Q60 60, 45 55 Q30 50, 15 55" fill="#F5B5C8" stroke="#2D2A26" stroke-width="2"/>
+      <!-- Cherry -->
+      <circle cx="45" cy="32" r="7" fill="#E8A87C" stroke="#2D2A26" stroke-width="1.5"/>
+      <path d="M45 25 Q52 18, 48 12" stroke="#4A7C59" stroke-width="1.5" fill="none"/>
+      <!-- Sprinkles on frosting -->
+      <circle cx="30" cy="45" r="2" fill="#B5D4E8"/>
+      <circle cx="55" cy="42" r="2" fill="#F5E6A3"/>
+      <circle cx="40" cy="50" r="1.5" fill="#B8D4B8"/>
+    </svg>
+
+    <!-- BOTTOM RIGHT: Concentric Circles/Swirl -->
+    <svg class="decoration animate-float-slow" style="bottom: 5%; right: 5%; width: 130px; height: 130px;" viewBox="0 0 130 130" fill="none">
+      <circle cx="65" cy="65" r="55" fill="none" stroke="#E6D5F2" stroke-width="10"/>
+      <circle cx="65" cy="65" r="42" fill="none" stroke="#FFDAB9" stroke-width="8"/>
+      <circle cx="65" cy="65" r="30" fill="none" stroke="#B8D4B8" stroke-width="6"/>
+      <circle cx="65" cy="65" r="18" fill="none" stroke="#B5D4E8" stroke-width="4"/>
+      <circle cx="65" cy="65" r="8" fill="#F5B5C8"/>
+    </svg>
+
+    <!-- SCATTERED BLOBS -->
+    <!-- Top center blob -->
+    <svg class="decoration" style="top: 5%; left: 35%; width: 60px; height: 50px; opacity: 0.6;" viewBox="0 0 60 50" fill="none">
+      <ellipse cx="30" cy="25" rx="25" ry="20" fill="#FFDAB9"/>
+    </svg>
+
+    <!-- Right side small coral blob -->
+    <svg class="decoration" style="top: 20%; right: 8%; width: 50px; height: 60px; opacity: 0.5;" viewBox="0 0 50 60" fill="none">
+      <path d="M25 5 Q45 15, 40 35 Q35 55, 15 50 Q5 40, 10 20 Q15 5, 25 5" fill="#F5B5C8"/>
+    </svg>
+
+    <!-- Left side mint blob -->
+    <svg class="decoration" style="bottom: 25%; left: 5%; width: 45px; height: 55px; opacity: 0.4;" viewBox="0 0 45 55" fill="none">
+      <ellipse cx="22" cy="28" rx="18" ry="22" fill="#B8D4B8"/>
+    </svg>
+
+    <!-- Bottom center dots -->
+    <svg class="decoration" style="bottom: 2%; left: 50%; transform: translateX(-50%); width: 200px; height: 30px; opacity: 0.5;" viewBox="0 0 200 30" fill="none">
+      <circle cx="30" cy="15" r="5" fill="#B8D4B8"/>
+      <circle cx="60" cy="15" r="4" fill="#F5B5C8"/>
+      <circle cx="100" cy="15" r="6" fill="#F5E6A3"/>
+      <circle cx="140" cy="15" r="4" fill="#E8A87C"/>
+      <circle cx="170" cy="15" r="5" fill="#B5D4E8"/>
+    </svg>
+
+    <!-- Top right lavender swoop -->
+    <svg class="decoration" style="top: 12%; right: 15%; width: 80px; height: 40px; opacity: 0.4;" viewBox="0 0 80 40" fill="none">
+      <path d="M5 35 Q40 5, 75 20" stroke="#E6D5F2" stroke-width="8" stroke-linecap="round" fill="none"/>
+    </svg>
+
+    <!-- Left yellow accent -->
+    <svg class="decoration" style="top: 55%; left: 8%; width: 35px; height: 35px; opacity: 0.5;" viewBox="0 0 35 35" fill="none">
+      <circle cx="17" cy="17" r="14" fill="#F5E6A3"/>
+    </svg>
+
+  </div>
+
+  <!-- ================================
+       MAIN CONTENT
+       ================================ -->
+  <main>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <h1 class="font-heading">Fine Dining Translator</h1>
+        <p>Turn your simple dish into a pretentious menu masterpiece.</p>
+      </header>
+
+      <!-- Main Card -->
+      <div class="card">
+        <div class="card-content">
+
+          <!-- Input Section -->
+          <div class="input-section">
+            <div class="input-icon-box">
+              <!-- Fork and Knife icon -->
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 2C7.55228 2 8 2.44772 8 3V9C8 10.3062 7.16519 11.4175 6 11.8293V21C6 21.5523 5.55228 22 5 22C4.44772 22 4 21.5523 4 21V11.8293C2.83481 11.4175 2 10.3062 2 9V3C2 2.44772 2.44772 2 3 2C3.55228 2 4 2.44772 4 3V8C4 8.55228 4.44772 9 5 9C5.55228 9 6 8.55228 6 8V3C6 2.44772 6.44772 2 7 2Z"/>
+                <path d="M15 2C15 2 15 7 15 9C15 11 14 12 14 12V21C14 21.5523 14.4477 22 15 22H16C16.5523 22 17 21.5523 17 21V12C17 12 16 11 16 9C16 7 16 2 16 2C16 2 18 2 19 2C20 2 21 3 21 4V9C21 10 20 11 19 11V21C19 21.5523 19.4477 22 20 22C20.5523 22 21 21.5523 21 21V11C22 11 23 10 23 9V4C23 3 22 2 21 2H15Z"/>
+              </svg>
+            </div>
+            <div class="input-wrapper">
+              <label for="dish-name">Your Simple Dish Name</label>
+              <input type="text" id="dish-name" class="input-field" placeholder="e.g., Grilled Cheese">
+            </div>
+          </div>
+
+          <!-- Options Grid -->
+          <div class="options-grid">
+            <!-- Establishment -->
+            <div class="option-group">
+              <h3>Choose Your Establishment</h3>
+              <div class="pill-group">
+                <button type="button" class="pill-mint" data-style="cafe">Cafe</button>
+                <button type="button" class="pill-mint" data-style="gastropub">Gastropub</button>
+                <button type="button" class="pill-mint selected" data-style="bistro">Bistro</button>
+                <button type="button" class="pill-mint" data-style="steakhouse">Steakhouse</button>
+                <button type="button" class="pill-mint" data-style="michelin">Michelin</button>
+                <button type="button" class="pill-dropdown" data-style="tasting">
+                  <span>Tasting Menu (unhinged)</span>
+                  <svg viewBox="0 0 12 12" fill="currentColor">
+                    <path d="M6 9L1 4h10z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Verbosity -->
+            <div class="option-group">
+              <h3>Description Verbosity</h3>
+              <div class="pill-group">
+                <button type="button" class="pill-butter" data-verbosity="short">short</button>
+                <button type="button" class="pill-butter selected" data-verbosity="medium">medium</button>
+                <button type="button" class="pill-butter" data-verbosity="excessive">excessive</button>
+                <button type="button" class="pill-butter" data-verbosity="unnecessary">absolutely unnecessary</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toggle Section -->
+          <div class="toggle-section">
+            <label class="toggle-box mint-bg">
+              <input type="checkbox" class="toggle-input" id="toggle-reveal" checked>
+              <div class="toggle-track active">
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="toggle-label">Add the reveal<br>at the end</span>
+            </label>
+
+            <label class="toggle-box blush-bg">
+              <input type="checkbox" class="toggle-input" id="toggle-ego">
+              <div class="toggle-track">
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="toggle-label">Extra chef ego</span>
+            </label>
+
+            <label class="toggle-box butter-bg">
+              <input type="checkbox" class="toggle-input" id="toggle-techniques">
+              <div class="toggle-track">
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="toggle-label">Add suspiciously specific<br>technique words</span>
+            </label>
+          </div>
+
+          <!-- Generate Button -->
+          <button type="button" class="generate-btn" id="generate-btn">
+            <span>Generate Masterpiece</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+              <path d="M2 2l7.586 7.586"/>
+              <circle cx="11" cy="11" r="2"/>
+            </svg>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Placeholder Text -->
+      <p class="placeholder-text" id="placeholder-text">
+        Enter a dish name above and click "Generate Masterpiece" to begin your culinary journey.
+      </p>
+
+      <!-- Menu Card (hidden initially) -->
+      <div class="menu-card hidden" id="menu-card">
+        <div class="menu-header">
+          <h2 class="menu-title font-heading">Menu</h2>
+          <div class="menu-divider">
+            <div class="menu-divider-line"></div>
+            <div class="menu-divider-dot"></div>
+            <div class="menu-divider-line"></div>
+          </div>
+        </div>
+        <p class="menu-description" id="menu-description">
+          House-extruded pasta pillows enveloped in a six-cheese emulsion, finished with a dusting of toasted artisanal breadcrumbs and micro-basil.
+        </p>
+        <p class="menu-reveal" id="menu-reveal">(It's Mac & Cheese)</p>
+        <button type="button" class="copy-btn" id="copy-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          <span>Copy</span>
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-links">
+          <a href="#">About the Chef 👨‍🍳</a>
+          <a href="#">Donate to the Ego Fund 👑</a>
+        </div>
+        <div class="footer-copyright">
+          © Copyright fine wording this too. 😊
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <script>
+    // State
+    let selectedStyle = 'bistro';
+    let selectedVerbosity = 'medium';
+
+    // DOM Elements
+    const dishInput = document.getElementById('dish-name');
+    const generateBtn = document.getElementById('generate-btn');
+    const menuCard = document.getElementById('menu-card');
+    const placeholderText = document.getElementById('placeholder-text');
+    const menuDescription = document.getElementById('menu-description');
+    const menuReveal = document.getElementById('menu-reveal');
+    const copyBtn = document.getElementById('copy-btn');
+
+    // Style Pills
+    document.querySelectorAll('.pill-mint, .pill-dropdown').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pill-mint, .pill-dropdown').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedStyle = btn.dataset.style;
+      });
+    });
+
+    // Verbosity Pills
+    document.querySelectorAll('.pill-butter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pill-butter').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedVerbosity = btn.dataset.verbosity;
+      });
+    });
+
+    // Toggles
+    document.querySelectorAll('.toggle-input').forEach(input => {
+      const track = input.nextElementSibling;
+
+      input.addEventListener('change', () => {
+        if (input.checked) {
+          track.classList.add('active');
+        } else {
+          track.classList.remove('active');
+        }
+      });
+    });
+
+    // Generate Button
+    generateBtn.addEventListener('click', () => {
+      const dishName = dishInput.value.trim();
+      if (!dishName) {
+        dishInput.focus();
+        return;
+      }
+
+      const hasReveal = document.getElementById('toggle-reveal').checked;
+      const hasEgo = document.getElementById('toggle-ego').checked;
+      const hasTechniques = document.getElementById('toggle-techniques').checked;
+
+      // Generate descriptions based on style and toggles
+      const descriptions = {
+        cafe: `Our artisanally-sourced ${dishName.toLowerCase()}, prepared with locally-foraged ingredients${hasTechniques ? ', utilizing precision-calibrated temperature control' : ''} and served alongside a house-made reduction.${hasEgo ? ' A humble tribute to our chef\'s grandmother\'s recipes.' : ''}`,
+        gastropub: `Deconstructed ${dishName.toLowerCase()} featuring heritage-breed elements${hasTechniques ? ', dry-brined for 72 hours' : ''}, finished with an umami-rich glaze and micro-herbs.${hasEgo ? ' Our head chef\'s award-winning interpretation.' : ''}`,
+        bistro: `A reimagined interpretation of ${dishName.toLowerCase()}, showcasing seasonal produce${hasTechniques ? ' through sous-vide immersion' : ''} in a delicate emulsion with edible flowers.${hasEgo ? ' Chef\'s signature creation since 2019.' : ''}`,
+        steakhouse: `Prime-cut ${dishName.toLowerCase()}${hasTechniques ? ', dry-aged for 45 days in our Himalayan salt chamber' : ''}, seared to perfection and finished with house-churned compound butter.${hasEgo ? ' As featured in our chef\'s James Beard nomination.' : ''}`,
+        michelin: `Spherified essence of ${dishName.toLowerCase()}, presented on a bed of dehydrated soil${hasTechniques ? ', utilizing liquid nitrogen flash-freezing and centrifuge clarification' : ''}, accompanied by thirty-six hour braised accompaniments.${hasEgo ? ' Our executive chef\'s three-star vision.' : ''}`,
+        tasting: `Course seven: The ${dishName.toLowerCase()} experience — a transcendent journey through texture and terroir${hasTechniques ? ', featuring reverse-spherification, ultrasonic extraction, and ancestral fermentation techniques' : ''}.${hasEgo ? ' Chef\'s deeply personal meditation on childhood memories, expressed through seventeen micro-courses.' : ''}`
+      };
+
+      menuDescription.textContent = descriptions[selectedStyle] || descriptions.bistro;
+
+      if (hasReveal) {
+        menuReveal.textContent = `(It's ${dishName})`;
+        menuReveal.style.display = 'block';
+      } else {
+        menuReveal.style.display = 'none';
+      }
+
+      placeholderText.classList.add('hidden');
+      menuCard.classList.remove('hidden');
+    });
+
+    // Copy Button
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(menuDescription.textContent);
+        copyBtn.classList.add('copied');
+        copyBtn.querySelector('span').textContent = 'Copied!';
+        copyBtn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.querySelector('span').textContent = 'Copy';
+          copyBtn.querySelector('svg').innerHTML = '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  </script>
+</body>
+</html>

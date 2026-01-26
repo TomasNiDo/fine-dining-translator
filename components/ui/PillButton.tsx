@@ -4,7 +4,8 @@ interface PillButtonProps {
   label: string;
   checked: boolean;
   onChange: (value: string) => void;
-  variant?: "mint" | "butter";
+  variant?: "default" | "tasting";
+  showDropdown?: boolean;
 }
 
 export function PillButton({
@@ -13,28 +14,19 @@ export function PillButton({
   label,
   checked,
   onChange,
-  variant = "mint",
+  variant = "default",
+  showDropdown = false,
 }: PillButtonProps) {
   const baseStyles = `
-    inline-flex items-center px-4 py-2 rounded-full
-    border-2 transition-all duration-200 whitespace-nowrap
-    text-sm font-medium
-    focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2
+    inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full
+    border-2 border-charcoal transition-all duration-150
+    text-sm font-medium whitespace-nowrap cursor-pointer
+    focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-charcoal/30
   `;
 
-  const variantStyles = {
-    mint: checked
-      ? "bg-mint border-charcoal/70 text-charcoal shadow-soft"
-      : "bg-white/60 border-charcoal/30 text-charcoal/70 hover:bg-mint-light/50 hover:border-charcoal/50",
-    butter: checked
-      ? "bg-butter border-charcoal/70 text-charcoal shadow-soft"
-      : "bg-white/60 border-charcoal/30 text-charcoal/70 hover:bg-butter/30 hover:border-charcoal/50",
-  };
-
-  const focusStyles = {
-    mint: "focus-within:ring-mint",
-    butter: "focus-within:ring-butter",
-  };
+  const stateStyles = checked
+    ? "bg-butter text-charcoal"
+    : "bg-white text-charcoal hover:bg-[#f5f5f5]";
 
   return (
     <label className="cursor-pointer">
@@ -46,8 +38,14 @@ export function PillButton({
         onChange={() => onChange(value)}
         className="sr-only peer"
       />
-      <span className={`${baseStyles} ${variantStyles[variant]} ${focusStyles[variant]}`}>
+      <span className={`${baseStyles} ${stateStyles}`}>
+        {variant === "tasting" && "🌟 "}
         {label}
+        {showDropdown && (
+          <svg viewBox="0 0 12 12" fill="currentColor" className="w-3 h-3">
+            <path d="M6 9L2 5h8z" />
+          </svg>
+        )}
       </span>
     </label>
   );

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine Dining Translator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFFDF5',
+                        pastelMint: '#C1E1C1',
+                        pastelPink: '#FFD1DC',
+                        pastelYellow: '#FDFD96',
+                        pastelBlue: '#AEC6CF',
+                        charcoal: '#333333',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Quicksand"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFFDF5;
+            background-image: radial-gradient(#FFD1DC 2px, transparent 2px), radial-gradient(#C1E1C1 2px, transparent 2px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+        }
+        
+        /* Custom scrollbar for horizontal scrolling lists */
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #333;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #C1E1C1;
+        }
+        
+        /* Whimsical heavy borders */
+        .brutalist-border {
+            border: 2px solid #333;
+            box-shadow: 4px 4px 0px #333;
+        }
+        .brutalist-border-sm {
+            border: 2px solid #333;
+            box-shadow: 2px 2px 0px #333;
+        }
+        .brutalist-active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #333;
+        }
+    </style>
+</head>
+<body class="text-charcoal font-sans min-h-screen flex items-center justify-center p-4">
+
+    <div class="fixed top-10 left-[-50px] w-64 h-64 bg-pastelMint rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+    <div class="fixed top-10 right-[-50px] w-64 h-64 bg-pastelPink rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+    <div class="fixed bottom-[-50px] left-20 w-64 h-64 bg-pastelYellow rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+
+    <main class="relative bg-cream w-full max-w-2xl rounded-3xl brutalist-border p-6 md:p-10 z-10">
+        
+        <header class="text-center mb-8">
+            <h1 class="font-serif text-4xl md:text-5xl font-bold mb-2 text-charcoal">Fine Dining Translator</h1>
+            <p class="text-gray-600 font-medium">Turn your simple dish into a pretentious menu masterpiece.</p>
+        </header>
+
+        <div class="mb-6">
+            <div class="bg-pastelMint/50 rounded-2xl border-2 border-charcoal p-1 pb-3 pl-3 pr-3">
+                <label class="block text-sm font-bold mb-1 ml-1 flex items-center gap-2">
+                    <i class="ph ph-fork-knife text-xl"></i> Your Simple Dish Name
+                </label>
+                <input type="text" id="dishInput" placeholder="e.g., Grilled Cheese" 
+                    class="w-full bg-white rounded-xl border-2 border-charcoal px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-pastelPink transition-all placeholder-gray-400">
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="font-bold mb-2 flex items-center gap-2">Choose Your Establishment <i class="ph ph-storefront"></i></h3>
+            <div class="flex gap-3 overflow-x-auto hide-scroll pb-2" id="styleContainer">
+                </div>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="font-bold mb-2 flex items-center gap-2">Description Verbosity <i class="ph ph-text-aa"></i></h3>
+            <div class="flex gap-2 flex-wrap" id="lengthContainer">
+                </div>
+        </div>
+
+        <div class="space-y-3 mb-8">
+            <div class="flex items-center justify-between bg-pastelYellow/50 p-3 rounded-xl border-2 border-charcoal">
+                <span class="font-bold text-sm md:text-base flex items-center gap-2"><i class="ph ph-mask-happy"></i> Add the reveal at the end 😉</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="toggleReveal" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 border-charcoal appearance-none cursor-pointer transition-all duration-300 left-0 checked:left-6"/>
+                    <label for="toggleReveal" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer border-2 border-charcoal"></label>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between bg-pastelPink/50 p-3 rounded-xl border-2 border-charcoal">
+                <span class="font-bold text-sm md:text-base flex items-center gap-2"><i class="ph ph-chef-hat"></i> Extra chef ego</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="toggleEgo" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 border-charcoal appearance-none cursor-pointer transition-all duration-300 left-0 checked:left-6"/>
+                    <label for="toggleEgo" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer border-2 border-charcoal"></label>
+                </div>
+            </div>
+
+             <div class="flex items-center justify-between bg-pastelBlue/50 p-3 rounded-xl border-2 border-charcoal">
+                <span class="font-bold text-sm md:text-base flex items-center gap-2"><i class="ph ph-flask"></i> Add suspiciously specific technique words</span>
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="toggleTech" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 border-charcoal appearance-none cursor-pointer transition-all duration-300 left-0 checked:left-6"/>
+                    <label for="toggleTech" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer border-2 border-charcoal"></label>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="generateDescription()" id="genBtn" class="w-full bg-pastelMint hover:bg-green-300 text-charcoal font-serif font-bold text-xl py-4 rounded-xl brutalist-border active:brutalist-active transition-all flex items-center justify-center gap-3">
+            <span>Generate Masterpiece</span> <i class="ph ph-magic-wand text-2xl"></i>
+        </button>
+
+        <div id="resultCard" class="mt-8 hidden opacity-0 transition-opacity duration-500">
+            <div class="relative bg-white border-2 border-charcoal p-6 md:p-8 rounded-xl shadow-lg">
+                <i class="ph ph-star-four absolute top-2 left-2 text-pastelPink text-xl"></i>
+                <i class="ph ph-star-four absolute bottom-2 right-2 text-pastelPink text-xl"></i>
+                
+                <h2 class="text-center font-serif text-2xl font-bold mb-4 border-b-2 border-gray-200 pb-2">Menu</h2>
+                <p id="resultText" class="text-center text-lg md:text-xl leading-relaxed italic font-serif text-gray-800">
+                    </p>
+                <div class="mt-4 flex justify-center text-yellow-500 gap-1 text-sm">
+                    <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-8 text-center text-xs font-bold text-gray-500 flex justify-between items-center">
+            <span class="cursor-pointer hover:underline">About the Chef 👨‍🍳</span>
+            <span class="flex items-center gap-1">© Copyright Fine winking this too. <i class="ph-fill ph-smiley"></i></span>
+        </footer>
+
+    </main>
+
+    <script>
+        // State
+        let selectedStyle = 'Michelin';
+        let selectedLength = 'medium';
+
+        // Data for selectors
+        const styles = ['Cafe', 'Gastropub', 'Bistro', 'Steakhouse', 'Michelin', 'Tasting Menu (unhinged)'];
+        const lengths = ['short', 'medium', 'excessive', 'absolutely unnecessary'];
+
+        // Mock Vocabulary Engine
+        const vocab = {
+            openers: ["A symphonic deconstruction of", "Locally foraged", "Hand-massaged", "Triple-seared", "A meditative study on", "Forgotten"],
+            adjectives: ["artisanal", "heirloom", "molecular", "day-aged", "impossibly texturized", "ethically confusing", "brutally honest"],
+            techniques: ["sous-vide for 72 hours", "reverse-seared", "nitrogen-blasted", "smoke-infused", "emulsified", "spherified"],
+            nouns: ["cloud", "soil", "reduction", "foam", "essence", "medley", "mosaic"],
+            ego: ["curated by Chef Julian", "as seen in my dream", "an homage to my grandmother's mistakes", "conceptually daunting"],
+            connectors: ["resting on a bed of", "finished with a dusting of", "married with", "juxtaposed against"]
+        };
+
+        // Initialize UI
+        function init() {
+            const styleContainer = document.getElementById('styleContainer');
+            const lengthContainer = document.getElementById('lengthContainer');
+
+            // Render Style Pills
+            styles.forEach(style => {
+                const btn = document.createElement('button');
+                btn.className = `whitespace-nowrap px-4 py-2 rounded-full border-2 border-charcoal font-bold text-sm transition-all ${style === selectedStyle ? 'bg-pastelYellow shadow-none translate-x-[1px] translate-y-[1px]' : 'bg-white shadow-[2px_2px_0px_#333] hover:translate-y-[-1px]'}`;
+                btn.innerText = style;
+                btn.onclick = () => {
+                    selectedStyle = style;
+                    updatePills(styleContainer, style);
+                };
+                styleContainer.appendChild(btn);
+            });
+
+            // Render Length Pills
+            lengths.forEach(len => {
+                const btn = document.createElement('button');
+                btn.className = `whitespace-nowrap px-3 py-1 rounded-full border-2 border-charcoal font-bold text-xs transition-all ${len === selectedLength ? 'bg-pastelPink shadow-none translate-x-[1px] translate-y-[1px]' : 'bg-white shadow-[2px_2px_0px_#333] hover:translate-y-[-1px]'}`;
+                btn.innerText = len;
+                btn.onclick = () => {
+                    selectedLength = len;
+                    updatePills(lengthContainer, len);
+                };
+                lengthContainer.appendChild(btn);
+            });
+        }
+
+        function updatePills(container, activeValue) {
+            Array.from(container.children).forEach(btn => {
+                const isActive = btn.innerText === activeValue;
+                if(isActive) {
+                    btn.classList.add('bg-pastelYellow', 'shadow-none', 'translate-x-[1px]', 'translate-y-[1px]');
+                    btn.classList.remove('bg-white', 'shadow-[2px_2px_0px_#333]');
+                    // If it's the length container, use Pink instead of Yellow for active
+                    if(container.id === 'lengthContainer') btn.classList.replace('bg-pastelYellow', 'bg-pastelPink');
+                } else {
+                    btn.classList.remove('bg-pastelYellow', 'bg-pastelPink', 'shadow-none', 'translate-x-[1px]', 'translate-y-[1px]');
+                    btn.classList.add('bg-white', 'shadow-[2px_2px_0px_#333]');
+                }
+            });
+        }
+
+        // The "Brain" (Mock Generator)
+        function generateDescription() {
+            const input = document.getElementById('dishInput').value.trim();
+            const btn = document.getElementById('genBtn');
+            const resultCard = document.getElementById('resultCard');
+            const resultText = document.getElementById('resultText');
+
+            // Toggles
+            const addReveal = document.getElementById('toggleReveal').checked;
+            const addEgo = document.getElementById('toggleEgo').checked;
+            const addTech = document.getElementById('toggleTech').checked;
+
+            if (!input) {
+                alert("Please enter a dish name, Chef!");
+                return;
+            }
+
+            // Loading State
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = `<span>Consulting the Sommelier...</span>`;
+            resultCard.classList.add('hidden');
+            resultCard.classList.remove('opacity-100');
+
+            setTimeout(() => {
+                // Generate Text
+                let description = "";
+
+                const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+                
+                // Base construction
+                if (selectedStyle === 'Tasting Menu (unhinged)') {
+                    description = `A conceptual lack of ${input}, served in a vacuum.`;
+                } else {
+                    description = `${rand(vocab.openers)} ${rand(vocab.adjectives)} ${input} ${rand(vocab.nouns)}`;
+                }
+
+                // Add Technique
+                if (addTech) {
+                    description += `, ${rand(vocab.techniques)} to the point of structural collapse`;
+                }
+
+                // Connectors
+                description += `, ${rand(vocab.connectors)} a ${rand(vocab.adjectives)} ${rand(vocab.nouns)}.`;
+
+                // Verbosity
+                if (selectedLength === 'excessive' || selectedLength === 'absolutely unnecessary') {
+                    description += ` Sourced from a farm that doesn't exist yet, and plated with aggressive indifference.`;
+                }
+                if (selectedLength === 'absolutely unnecessary') {
+                    description += ` The plate represents the dichotomy of man's hunger against the indifference of the cosmos.`;
+                }
+
+                // Ego
+                if (addEgo) {
+                    description += ` (${rand(vocab.ego)})`;
+                }
+
+                // Reveal
+                if (addReveal) {
+                    description += `<br><br><span class="text-sm font-sans text-gray-500 not-italic">(It's just ${input})</span>`;
+                }
+
+                // Display
+                resultText.innerHTML = description;
+                btn.innerHTML = originalBtnText;
+                resultCard.classList.remove('hidden');
+                // Trigger reflow for transition
+                void resultCard.offsetWidth;
+                resultCard.classList.add('opacity-100');
+
+            }, 1500);
+        }
+
+        // Run Init
+        init();
+
+    </script>
+</body>
+</html>

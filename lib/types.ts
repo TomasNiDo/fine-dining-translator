@@ -44,7 +44,7 @@ export interface TranslatorOptions {
 // Default options
 export const defaultOptions: TranslatorOptions = {
   style: "gastropub",
-  length: "medium",
+  length: "short",
   addReveal: false,
   addChefEgo: false,
   addTechniques: false,

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine Dining Translator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffc0cb 0%, #98d8c8 50%, #fff9b0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: #ffc0cb;
+            border-radius: 50%;
+            top: -50px;
+            left: -50px;
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: #fff9b0;
+            border-radius: 50%;
+            bottom: -80px;
+            right: -80px;
+            opacity: 0.5;
+        }
+
+        .container {
+            background: linear-gradient(135deg, #f5f5dc 0%, #faf8f3 100%);
+            border: 3px solid #333;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2d2d2d;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #444;
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+            border: 3px solid #333;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-box {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 15px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            flex-shrink: 0;
+        }
+
+        .input-wrapper {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: #2d2d2d;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .option-group h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #2d2d2d;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: 2px solid #333;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+        }
+
+        .btn.active {
+            background: #ffd700;
+        }
+
+        select {
+            padding: 10px 35px 10px 20px;
+            border: 2px solid #333;
+            border-radius: 20px;
+            background: #ffd700;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95em;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        .toggle-section {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .toggle-box {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 200px;
+        }
+
+        .toggle-box.pink {
+            background: linear-gradient(135deg, #f8bbd0 0%, #f48fb1 100%);
+        }
+
+        .toggle-box.blue {
+            background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 100%);
+        }
+
+        .toggle {
+            width: 50px;
+            height: 28px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .toggle.active {
+            background: #4caf50;
+        }
+
+        .toggle.active::after {
+            transform: translateX(22px);
+        }
+
+        .generate-btn {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+            border: 3px solid #333;
+            border-radius: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #2e7d32;
+            transition: all 0.1s;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #2e7d32;
+        }
+
+        .generate-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #2e7d32;
+        }
+
+        .menu-output {
+            background: white;
+            border: 3px solid #333;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            min-height: 150px;
+            position: relative;
+        }
+
+        .menu-output::before,
+        .menu-output::after {
+            content: '✦';
+            position: absolute;
+            font-size: 1.5em;
+            color: #ddd;
+        }
+
+        .menu-output::before {
+            top: 20px;
+            left: 20px;
+        }
+
+        .menu-output::after {
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .menu-output h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #2d2d2d;
+        }
+
+        .menu-output p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .reveal {
+            font-style: italic;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-link {
+            color: #2d2d2d;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .copyright {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fine Dining Translator</h1>
+        <p class="subtitle">Turn your simple dish into a pretentious menu masterpiece.</p>
+
+        <div class="input-section">
+            <div class="icon-box">🍽️</div>
+            <div class="input-wrapper">
+                <label for="dishName">Your Simple Dish Name</label>
+                <input type="text" id="dishName" placeholder="e.g., Grilled Cheese">
+            </div>
+        </div>
+
+        <div class="options-grid">
+            <div class="option-group">
+                <h3>Choose Your Establishment</h3>
+                <div class="button-group">
+                    <button class="btn" data-option="cafe">Cafe</button>
+                    <button class="btn" data-option="gastropub">Gastropub</button>
+                    <button class="btn" data-option="bistro">Bistro</button>
+                    <button class="btn active" data-option="steakhouse">Steakhouse</button>
+                </div>
+                <div style="margin-top: 10px;">
+                    <button class="btn" data-option="michelin">Michelin</button>
+                    <select id="tastingMenu">
+                        <option>🌟 Tasting Menu (unhinged)</option>
+                        <option>🌟 Tasting Menu (refined)</option>
+                        <option>🌟 Tasting Menu (experimental)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Description Verbosity</h3>
+                <div class="button-group">
+                    <button class="btn" data-verbosity="short">short</button>
+                    <button class="btn active" data-verbosity="medium">medium</button>
+                    <button class="btn" data-verbosity="excessive">excessive</button>
+                    <button class="btn" data-verbosity="unnecessary">absolutely unnecessary</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="toggle-section">
+            <div class="toggle-box blue">
+                <div class="toggle" id="revealToggle"></div>
+                <span>Add the reveal<br>at the end 🤫</span>
+            </div>
+            <div class="toggle-box pink">
+                <div class="toggle" id="egoToggle"></div>
+                <span>Extra chef ego</span>
+            </div>
+            <div class="toggle-box">
+                <div class="toggle" id="techniqueToggle"></div>
+                <span>Add suspiciously specific<br>technique words 😏</span>
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generateMenu()">Generate Masterpiece 🖊️</button>
+
+        <div class="menu-output">
+            <h2>Menu</h2>
+            <p id="menuText">House-extruded pasta pillows enveloped in a six-cheese emulsion, finished with a dusting of toasted artisanal breadcrumbs and micro-basil.</p>
+            <p class="reveal" id="revealText">(It's Mac & Cheese)</p>
+        </div>
+
+        <div class="footer">
+            <div>
+                <a href="#" class="footer-link">About the Chef 👨‍🍳</a>
+                <a href="#" class="footer-link" style="margin-left: 20px;">Donate to the Ego Fund 👑</a>
+            </div>
+            <div class="copyright">
+                © Copyright fine winking this too. 😊
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle functionality
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // Button selection
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const group = this.parentElement;
+                group.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function generateMenu() {
+            const dish = document.getElementById('dishName').value || 'Grilled Cheese';
+            const establishment = document.querySelector('.btn.active[data-option]')?.dataset.option || 'steakhouse';
+            const verbosity = document.querySelector('.btn.active[data-verbosity]')?.dataset.verbosity || 'medium';
+            const hasReveal = document.getElementById('revealToggle').classList.contains('active');
+            const hasEgo = document.getElementById('egoToggle').classList.contains('active');
+            const hasTechnique = document.getElementById('techniqueToggle').classList.contains('active');
+
+            let description = '';
+            
+            if (dish.toLowerCase().includes('cheese')) {
+                description = 'Artisanal dairy fusion delicately layered between hand-selected grain wafers, ';
+                if (hasTechnique) description += 'sous-vide perfected and ';
+                description += 'finished with a gentle kiss of flame.';
+                if (hasEgo) description += ' A testament to our chef\'s mastery of classical technique.';
+            } else if (dish.toLowerCase().includes('burger')) {
+                description = 'Grass-fed beef medallion nestled in a brioche embrace, ';
+                if (hasTechnique) description += 'dry-aged for 28 days and ';
+                description += 'adorned with heirloom tomato and microgreens.';
+                if (hasEgo) description += ' Our chef\'s reimagining of an American classic.';
+            } else {
+                description = `Carefully curated ${dish.toLowerCase()} `;
+                if (hasTechnique) description += 'utilizing molecular gastronomy techniques, ';
+                description += 'presented with seasonal accompaniments and artisanal garnishes.';
+                if (hasEgo) description += ' A signature creation by our award-winning chef.';
+            }
+
+            document.getElementById('menuText').textContent = description;
+            document.getElementById('revealText').style.display = hasReveal ? 'block' : 'none';
+            document.getElementById('revealText').textContent = `(It's ${dish})`;
+        }
+    </script>
+</body>
+</html>

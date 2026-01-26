@@ -8,19 +8,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cream: "#FDF6E3",
+        // Updated colors for variant-f
+        cream: "#F5F0E6",
+        "cream-light": "#FAF8F3",
         charcoal: "#2D2A26",
-        mint: "#B8D4B8",
-        "mint-light": "#D4E8D4",
+        mint: "#A8E6CF",
+        "mint-light": "#C5F0DC",
         blush: "#F5B5C8",
         "blush-light": "#FADADD",
         coral: "#E8A87C",
         "coral-dark": "#D4956A",
-        butter: "#F5E6A3",
+        butter: "#FFE66D",
+        "butter-light": "#FFF3B0",
         sage: "#C9D4C5",
         peach: "#FFDAB9",
         lavender: "#E6D5F2",
         sky: "#B5D4E8",
+        // New colors for variant-f
+        "pink-blob": "#FFC4D0",
+        "coral-blob": "#FFDAB9",
+        "blue-stroke": "#4A90D9",
+        "purple-btn": "#6B5B95",
+        "purple-btn-light": "#8B7DB5",
+        "toggle-pink": "#FFCDD2",
+        "tan-outline": "#C4A77D",
       },
       fontFamily: {
         heading: ["var(--font-playfair)", "Georgia", "serif"],
