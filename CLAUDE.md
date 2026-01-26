@@ -13,6 +13,8 @@ Auto-generated from all feature plans. Last updated: 2026-01-26
 - N/A (stateless - tooltip content is static) (006-option-tooltips)
 - TypeScript 5.x with Next.js 14 (App Router) + Next.js 14, React 18, Tailwind CSS, OpenAI SDK (^6.16.0) (007-api-security)
 - In-memory rate limit tracking (Map-based, resets on cold start) - N/A for persistent storage (007-api-security)
+- TypeScript 5.x with Next.js 14 (App Router) + @vercel/analytics (new), React 18, Next.js 14.2.35 (008-vercel-analytics)
+- N/A (analytics data stored by Vercel, no local persistence) (008-vercel-analytics)
 
 - TypeScript 5.x with Next.js 14 (App Router) + Next.js 14, Tailwind CSS, Lucide React (icons) (001-fine-dining-translator)
 
@@ -32,9 +34,9 @@ npm test && npm run lint
 TypeScript 5.x with Next.js 14 (App Router): Follow standard conventions
 
 ## Recent Changes
+- 008-vercel-analytics: Added TypeScript 5.x with Next.js 14 (App Router) + @vercel/analytics (new), React 18, Next.js 14.2.35
 - 007-api-security: Added TypeScript 5.x with Next.js 14 (App Router) + Next.js 14, React 18, Tailwind CSS, OpenAI SDK (^6.16.0)
 - 006-option-tooltips: Added TypeScript 5.x with Next.js 14 (App Router) + React 18, Tailwind CSS 3.4.1, Lucide React (icons)
-- 005-ui-redesign: Added TypeScript 5.x with Next.js 14 (App Router) + React 18, Tailwind CSS 3.4.1, Lucide React, OpenAI SDK
 
 
 <!-- MANUAL ADDITIONS START -->
