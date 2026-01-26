@@ -101,7 +101,7 @@
 - [x] T019 [US4] Ensure all security events use consistent JSON format in lib/security-logger.ts
 - [x] T020 [US4] Add SUSPICIOUS_INPUT detection for common injection patterns in lib/sanitize.ts
 - [x] T021 [US4] Log SUSPICIOUS_INPUT events (without logging actual content) in app/api/generate/route.ts
-- [ ] T022 [US4] Verify logs appear in Vercel dashboard (deploy and test)
+- [x] T022 [US4] Verify logs appear in Vercel dashboard (deploy and test)
 
 **Checkpoint**: Security events visible in Vercel logs with searchable JSON format
 
@@ -114,7 +114,7 @@
 - [x] T023 Run full manual test suite from quickstart.md
 - [x] T024 Verify all rate limit edge cases (cold start, concurrent requests)
 - [x] T025 Update quickstart.md Definition of Done checklist with test results
-- [ ] T026 Deploy to Vercel and verify production behavior
+- [x] T026 Deploy to Vercel and verify production behavior
 
 ---
 
