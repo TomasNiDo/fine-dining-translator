@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 import { buildPrompt, SYSTEM_PROMPT } from "@/lib/prompts";
 import {
   GenerateRequest,
@@ -15,16 +15,16 @@ import {
 import { hashIp, logSecurityEvent } from "@/lib/security-logger";
 import { sanitizeInput } from "@/lib/sanitize";
 
-// Lazy-initialize OpenAI client to avoid build-time errors
-let openai: OpenAI | null = null;
+// Lazy-initialize Gemini client to avoid build-time errors
+let geminiClient: GoogleGenAI | null = null;
 
-function getOpenAIClient(): OpenAI {
-  if (!openai) {
-    openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+function getGeminiClient(): GoogleGenAI {
+  if (!geminiClient) {
+    geminiClient = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY || "",
     });
   }
-  return openai;
+  return geminiClient;
 }
 
 // Helper to add rate limit headers to response
@@ -153,25 +153,31 @@ export async function POST(
     );
   }
 
+  if (!process.env.GEMINI_API_KEY) {
+    return errorResponse(
+      "MISSING_API_KEY",
+      "The kitchen is closed without a Gemini API key. Please set GEMINI_API_KEY and try again.",
+      500,
+      rateLimitResult
+    );
+  }
+
   // Build the prompt with sanitized input
   const prompt = buildPrompt({
     dishName,
     options: body.options,
   });
 
-  // Call OpenAI GPT-4o
+  // Call Gemini
   try {
-    const completion = await getOpenAIClient().chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: prompt },
-      ],
-      max_tokens: 500,
-      temperature: 0.9, // Higher for creativity
+    const result = await getGeminiClient().models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `${SYSTEM_PROMPT}\n\n${prompt}`,
+      config: {
+        temperature: 0.9,
+      },
     });
-
-    const description = completion.choices[0]?.message?.content?.trim();
+    const description = result.text?.trim();
 
     if (!description) {
       return errorResponse(
@@ -196,39 +202,41 @@ export async function POST(
     addRateLimitHeaders(response.headers, rateLimitResult);
     return response;
   } catch (error) {
-    // Handle specific OpenAI errors
-    if (error instanceof OpenAI.APIError) {
-      if (error.status === 429) {
-        return errorResponse(
-          "RATE_LIMITED",
-          "Our kitchen is too busy right now. Please wait a moment and try again.",
-          429,
-          rateLimitResult
-        );
-      }
+    const status = (error as { status?: number })?.status;
+    const code = (error as { code?: string })?.code;
 
-      if (error.status === 401) {
-        console.error("OpenAI API key invalid or missing");
-        return errorResponse(
-          "AI_SERVICE_ERROR",
-          "The chef is on vacation. Please try again later.",
-          500,
-          rateLimitResult
-        );
-      }
+    console.log("Gemini API call failed:", error);
 
-      if (error.code === "timeout" || error.status === 504) {
-        return errorResponse(
-          "AI_TIMEOUT",
-          "This dish is taking too long to prepare. Please try again.",
-          504,
-          rateLimitResult
-        );
-      }
+    if (status === 429) {
+      return errorResponse(
+        "RATE_LIMITED",
+        "Our kitchen is too busy right now. Please wait a moment and try again.",
+        429,
+        rateLimitResult
+      );
+    }
+
+    if (status === 401 || status === 403) {
+      console.error("Gemini API key invalid or missing");
+      return errorResponse(
+        "AI_SERVICE_ERROR",
+        "The chef is on vacation. Please try again later.",
+        500,
+        rateLimitResult
+      );
+    }
+
+    if (code === "timeout" || status === 504) {
+      return errorResponse(
+        "AI_TIMEOUT",
+        "This dish is taking too long to prepare. Please try again.",
+        504,
+        rateLimitResult
+      );
     }
 
     // Generic error fallback
-    console.error("OpenAI API error:", error);
+    console.error("Gemini API error:", error);
     return errorResponse(
       "AI_SERVICE_ERROR",
       "The chef had a creative block. Let's try again.",

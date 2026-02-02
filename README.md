@@ -18,7 +18,7 @@ Enter "grilled cheese" and get back something like *"Artisanal Heritage Cheddar,
 - Next.js 14 (App Router)
 - React 18
 - Tailwind CSS
-- OpenAI API
+- Gemini API
 
 ## Getting Started
 
@@ -27,9 +27,9 @@ Enter "grilled cheese" and get back something like *"Artisanal Heritage Cheddar,
    ```bash
    npm install
    ```
-3. Create a `.env.local` file with your OpenAI API key:
+3. Create a `.env.local` file with your Gemini API key:
    ```
-   OPENAI_API_KEY=your_api_key_here
+   GEMINI_API_KEY=your_api_key_here
    ```
 4. Run the development server:
    ```bash
