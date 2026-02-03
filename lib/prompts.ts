@@ -131,7 +131,9 @@ Length: ${LENGTH_INSTRUCTIONS[length]}
 Important guidelines:
 - Be genuinely creative and amusing. Each description should feel unique.
 - Never be generic or repetitive.
-- Don't mention the original dish name directly in the description (unless specifically required below).
+- Do not mention the original dish name anywhere in the description.
+- If a reveal is required, mention the dish name only once, at the very end, as part of the punchline.
+- If a reveal is required, it must be the final clause of the final sentence, after all chef attributions.
 - Make the reader smile or chuckle at the absurdity.
 - Use sentence case: capitalize only the first letter of the description and proper nouns (like "French" or chef names). Do NOT use Title Case where every word is capitalized.
 - Output ONLY the menu description text, nothing else.
